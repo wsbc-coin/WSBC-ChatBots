@@ -1,10 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>WSBC.Discord</RootNamespace>
     <AssemblyName>WsbcDiscordBot</AssemblyName>
+    <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
+    <Company>WallStreetBetsCoin</Company>
+    <Version>0.1.0</Version>
+    <Product>WSBC.DiscordBot</Product>
+    <PackageId>WSBC.DiscordBot</PackageId>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <Copyright>Copyright (c) 2021 TehGM and WallStreetBetsCoin Developers</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <Description>Main Discord Bot for WallStreetBets Coin.</Description>
   </PropertyGroup>
 
   <ItemGroup>
