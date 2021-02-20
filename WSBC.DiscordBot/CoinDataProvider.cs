@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using WSBC.Discord.TxBit;
 
 namespace WSBC.Discord
@@ -9,15 +11,29 @@ namespace WSBC.Discord
     {
         private readonly ICoinDataClient<TxBitData> _txbitClient;
         private readonly ILogger _log;
+        private readonly IOptionsMonitor<CachingOptions> _cachingOptions;
 
-        public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, ILogger<CoinDataProvider> log)
+        // cached data
+        private CoinData _cachedResult;
+        private DateTime _lastDownloadTimeUTC;
+
+        public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, ILogger<CoinDataProvider> log, 
+            IOptionsMonitor<CachingOptions> cachingOptions)
         {
             this._txbitClient = txbitClient;
             this._log = log;
+            this._cachingOptions = cachingOptions;
         }
 
         public async Task<CoinData> GetDataAsync(CancellationToken cancellationToken = default)
         {
+            // attempt to get cached first to avoid hammering APIs
+            if (_cachedResult != null && DateTime.UtcNow < this._lastDownloadTimeUTC + this._cachingOptions.CurrentValue.DataCacheLifetime)
+            {
+                this._log.LogTrace("Found valid cached coin data, skipping APIs request");
+                return _cachedResult;
+            }
+
             this._log.LogInformation("Downloading all coin data");
 
             // start downloading: TxBit
@@ -27,13 +43,15 @@ namespace WSBC.Discord
             TxBitData txbitData = await txbitTask.ConfigureAwait(false);
 
             // aggregate all data and return
-            return new CoinData(txbitData.CurrencyName, txbitData.CurrencyCode)
+            this._cachedResult = new CoinData(txbitData.CurrencyName, txbitData.CurrencyCode)
             {
                 Supply = txbitData.Supply,
                 MarketCap = txbitData.MarketCap,
                 BtcPrice = txbitData.BidPrice,
                 BlockHeight = txbitData.BlockCount
             };
+            this._lastDownloadTimeUTC = DateTime.UtcNow;
+            return this._cachedResult;
         }
     }
 }

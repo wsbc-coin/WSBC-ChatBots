@@ -46,7 +46,8 @@ namespace WSBC.Discord
             services.Configure<WsbcOptions>(configuration);
 
             // data aggregator
-            services.AddTransient<ICoinDataProvider, CoinDataProvider>();
+            services.AddTransient<ICoinDataProvider, CoinDataProvider>()
+                .Configure<CachingOptions>(configuration.GetSection("Caching"));
 
             // Logging
             services.AddSingleton<ILoggerFactory>(new LoggerFactory()
