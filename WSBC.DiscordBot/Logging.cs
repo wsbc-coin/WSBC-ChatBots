@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 
-namespace WSBC.Discord
+namespace WSBC.DiscordBot
 {
     static class Logging
     {

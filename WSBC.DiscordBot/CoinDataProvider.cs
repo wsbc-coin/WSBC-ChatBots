@@ -3,9 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WSBC.Discord.TxBit;
+using WSBC.DiscordBot.TxBit;
 
-namespace WSBC.Discord
+namespace WSBC.DiscordBot
 {
     class CoinDataProvider : ICoinDataProvider, IDisposable
     {

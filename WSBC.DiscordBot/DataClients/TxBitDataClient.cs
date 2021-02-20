@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
-using WSBC.Discord.TxBit;
+using WSBC.DiscordBot.TxBit;
 
-namespace WSBC.Discord.DataClients
+namespace WSBC.DiscordBot.DataClients
 {
     class TxBitDataClient : ICoinDataClient<TxBitData>
     {

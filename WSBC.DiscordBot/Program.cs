@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using WSBC.Discord.DataClients;
-using WSBC.Discord.TxBit;
+using WSBC.DiscordBot.DataClients;
+using WSBC.DiscordBot.TxBit;
 
-namespace WSBC.Discord
+namespace WSBC.DiscordBot
 {
     class Program
     {

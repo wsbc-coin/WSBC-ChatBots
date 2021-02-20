@@ -1,4 +1,4 @@
-﻿namespace WSBC.Discord
+﻿namespace WSBC.DiscordBot
 {
     /// <summary>Represents aggregated data for displaying in Discord.</summary>
     class CoinData

@@ -1,4 +1,4 @@
-﻿namespace WSBC.Discord.TxBit
+﻿namespace WSBC.DiscordBot.TxBit
 {
     class TxBitOptions
     {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>WSBC.Discord</RootNamespace>
+    <RootNamespace>WSBC.DiscordBot</RootNamespace>
     <AssemblyName>WsbcDiscordBot</AssemblyName>
     <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
     <Company>WallStreetBetsCoin</Company>

@@ -1,4 +1,4 @@
-﻿namespace WSBC.Discord
+﻿namespace WSBC.DiscordBot
 {
     class WsbcOptions
     {
