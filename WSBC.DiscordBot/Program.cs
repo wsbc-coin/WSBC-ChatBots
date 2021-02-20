@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using WSBC.DiscordBot.DataClients;
+using WSBC.DiscordBot.Discord;
 using WSBC.DiscordBot.TxBit;
 
 namespace WSBC.DiscordBot
@@ -30,6 +33,11 @@ namespace WSBC.DiscordBot
                 IServiceCollection serviceCollection = ConfigureServices(config);
                 IServiceProvider services = serviceCollection.BuildServiceProvider();
 
+                // start Discord.NET client
+                WsbcDiscordClient client = services.GetRequiredService<WsbcDiscordClient>();
+                await client.StartClientAsync().ConfigureAwait(false);
+
+                // wait forever to prevent window closing
                 await Task.Delay(-1).ConfigureAwait(false);
             }
             finally
@@ -52,6 +60,12 @@ namespace WSBC.DiscordBot
             // Logging
             services.AddSingleton<ILoggerFactory>(new LoggerFactory()
                         .AddSerilog(Log.Logger, dispose: true));
+
+            // Discord.NET
+            services.AddSingleton<WsbcDiscordClient>()
+                .AddSingleton<DiscordSocketClient>(s => s.GetRequiredService<WsbcDiscordClient>().Client)
+                .AddSingleton<IDiscordClient>(s => s.GetRequiredService<DiscordSocketClient>())
+                .Configure<DiscordOptions>(configuration.GetSection("Discord"));
 
             // Clients
             services.AddHttpClient();
