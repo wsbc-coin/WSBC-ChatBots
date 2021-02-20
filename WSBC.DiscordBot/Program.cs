@@ -45,6 +45,9 @@ namespace WSBC.Discord
             // global coin options
             services.Configure<WsbcOptions>(configuration);
 
+            // data aggregator
+            services.AddTransient<ICoinDataProvider, CoinDataProvider>();
+
             // Logging
             services.AddSingleton<ILoggerFactory>(new LoggerFactory()
                         .AddSerilog(Log.Logger, dispose: true));
