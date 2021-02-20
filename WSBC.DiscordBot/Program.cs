@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace WSBC.Discord
 {
@@ -15,6 +15,20 @@ namespace WSBC.Discord
                 .AddJsonFile("appsecrets.json", optional: true)
                 .AddCommandLine(args)
                 .Build();
+
+            // enable logging
+            Logging.ConfigureLogging(config);
+
+            try
+            {
+                // other startup logic goes here
+
+                await Task.Delay(-1).ConfigureAwait(false);
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }
