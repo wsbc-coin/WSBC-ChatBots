@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace WSBC.Discord
@@ -21,7 +23,10 @@ namespace WSBC.Discord
 
             try
             {
-                // other startup logic goes here
+                // prepare DI container
+                IServiceCollection services = new ServiceCollection()
+                    .AddSingleton<ILoggerFactory>(new LoggerFactory()
+                        .AddSerilog(Log.Logger, dispose: true));
 
                 await Task.Delay(-1).ConfigureAwait(false);
             }
