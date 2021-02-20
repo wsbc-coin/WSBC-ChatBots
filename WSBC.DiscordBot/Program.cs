@@ -1,14 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using WSBC.Discord.DataClients;
+using WSBC.Discord.TxBit;
 
 namespace WSBC.Discord
 {
     class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             // build configuration
             IConfiguration config = new ConfigurationBuilder()
@@ -24,9 +27,8 @@ namespace WSBC.Discord
             try
             {
                 // prepare DI container
-                IServiceCollection services = new ServiceCollection()
-                    .AddSingleton<ILoggerFactory>(new LoggerFactory()
-                        .AddSerilog(Log.Logger, dispose: true));
+                IServiceCollection serviceCollection = ConfigureServices(config);
+                IServiceProvider services = serviceCollection.BuildServiceProvider();
 
                 await Task.Delay(-1).ConfigureAwait(false);
             }
@@ -34,6 +36,26 @@ namespace WSBC.Discord
             {
                 Log.CloseAndFlush();
             }
+        }
+
+        private static IServiceCollection ConfigureServices(IConfiguration configuration)
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            // global coin options
+            services.Configure<WsbcOptions>(configuration);
+
+            // Logging
+            services.AddSingleton<ILoggerFactory>(new LoggerFactory()
+                        .AddSerilog(Log.Logger, dispose: true));
+
+            // Clients
+            services.AddHttpClient();
+            // - TxBit
+            services.AddTransient<ICoinDataClient<TxBitData>, TxBitDataClient>()
+                .Configure<TxBitOptions>(configuration.GetSection("TxBit"));
+
+            return services;
         }
     }
 }
