@@ -31,7 +31,7 @@ namespace WSBC.Discord.DataClients
             this._log.LogTrace("Building TxBit request URL");
             Uri url = new Uri($"{this._txbitOptions.ApiURL}/getcurrencyinformation?currency={this._wsbcOptions.CoinCode}");
 
-            this._log.LogDebug("Sending request to {URL}", url);
+            this._log.LogTrace("Sending request to {URL}", url);
             HttpClient client = this._clientFactory.CreateClient();
             using HttpResponseMessage response = await client.GetAsync(url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
