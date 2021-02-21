@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using WSBC.DiscordBot.Discord;
 using WSBC.DiscordBot.Discord.Services;
+using WSBC.DiscordBot.Explorer;
+using WSBC.DiscordBot.Explorer.Services;
 using WSBC.DiscordBot.Services;
 using WSBC.DiscordBot.TxBit;
 using WSBC.DiscordBot.TxBit.Services;
@@ -83,6 +85,9 @@ namespace WSBC.DiscordBot
             // - TxBit
             services.AddTransient<ICoinDataClient<TxBitData>, TxBitDataClient>()
                 .Configure<TxBitOptions>(configuration.GetSection("TxBit"));
+            // - Explorer
+            services.AddTransient<IExplorerDataClient, ExplorerDataClient>()
+                .Configure<ExplorerOptions>(configuration.GetSection("Explorer"));
 
             return services;
         }
