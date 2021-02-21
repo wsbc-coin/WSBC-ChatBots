@@ -33,7 +33,9 @@ namespace WSBC.DiscordBot
                 IServiceCollection serviceCollection = ConfigureServices(config);
                 IServiceProvider services = serviceCollection.BuildServiceProvider();
 
-                // start Discord.NET client
+                // start Discord.NET client and commands handler
+                ICommandHandler handler = services.GetRequiredService<ICommandHandler>();
+                await handler.InitializeAsync().ConfigureAwait(false);
                 WsbcDiscordClient client = services.GetRequiredService<WsbcDiscordClient>();
                 await client.StartClientAsync().ConfigureAwait(false);
 
@@ -62,9 +64,14 @@ namespace WSBC.DiscordBot
                         .AddSerilog(Log.Logger, dispose: true));
 
             // Discord.NET
-            services.AddSingleton<WsbcDiscordClient>()
+            services
+                // - Client wrapper
+                .AddSingleton<WsbcDiscordClient>()
                 .AddSingleton<DiscordSocketClient>(s => s.GetRequiredService<WsbcDiscordClient>().Client)
                 .AddSingleton<IDiscordClient>(s => s.GetRequiredService<DiscordSocketClient>())
+                // - Command service
+                .AddSingleton<ICommandHandler, SimpleCommandHandler>()
+                // - Config
                 .Configure<DiscordOptions>(configuration.GetSection("Discord"));
 
             // Clients
