@@ -1,7 +1,7 @@
 ﻿namespace WSBC.DiscordBot
 {
     /// <summary>Represents aggregated data for displaying in Discord.</summary>
-    class CoinData
+    public class CoinData
     {
         /// <summary>Full name of the currency.</summary>
         public string Name { get; }
