@@ -6,9 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using WSBC.DiscordBot.DataClients;
 using WSBC.DiscordBot.Discord;
+using WSBC.DiscordBot.Discord.Services;
+using WSBC.DiscordBot.Services;
 using WSBC.DiscordBot.TxBit;
+using WSBC.DiscordBot.TxBit.Services;
 
 namespace WSBC.DiscordBot
 {

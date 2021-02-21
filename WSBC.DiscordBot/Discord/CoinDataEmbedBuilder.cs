@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Microsoft.Extensions.Options;
 
-namespace WSBC.DiscordBot.Discord
+namespace WSBC.DiscordBot.Discord.Services
 {
     class CoinDataEmbedBuilder : ICoinDataEmbedBuilder
     {

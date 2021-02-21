@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WSBC.DiscordBot.TxBit;
 
-namespace WSBC.DiscordBot
+namespace WSBC.DiscordBot.Services
 {
     class CoinDataProvider : ICoinDataProvider, IDisposable
     {
