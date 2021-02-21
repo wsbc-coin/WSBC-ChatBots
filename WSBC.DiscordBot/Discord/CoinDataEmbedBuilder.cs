@@ -22,7 +22,7 @@ namespace WSBC.DiscordBot.Discord.Services
             EmbedBuilder builder = this.CreateDefaultEmbed(message);
             builder.Title = this._options.CoinName;
             builder.Url = this._options.CoinURL;
-            builder.AddField("Current Supply", data.Supply.ToString("0", CultureInfo.InvariantCulture), inline: true);
+            builder.AddField("Current Supply", data.Supply.ToString("N0", CultureInfo.InvariantCulture), inline: true);
             builder.AddField("Market Cap", $"${data.MarketCap.ToString("0.00", CultureInfo.InvariantCulture)}", inline: true);
             builder.AddField("BTC Value", data.BtcPrice, inline: true);
             builder.AddField("Network", this.BuildNetworkFieldText(data), inline: false);

@@ -28,6 +28,12 @@ namespace WSBC.DiscordBot.Explorer.Services
             return this.SendRequestAsync<ExplorerBlockData>($"block/{blockID}", cancellationToken);
         }
 
+        public Task<ExplorerEmissionData> GetEmissionDataAsync(CancellationToken cancellationToken = default)
+        {
+            this._log.LogDebug("Requesting Emission data from Explorer");
+            return this.SendRequestAsync<ExplorerEmissionData>($"emission", cancellationToken);
+        }
+
         public Task<ExplorerNetworkData> GetNetworkDataAsync(CancellationToken cancellationToken = default)
         {
             this._log.LogDebug("Requesting Network data from Explorer");
