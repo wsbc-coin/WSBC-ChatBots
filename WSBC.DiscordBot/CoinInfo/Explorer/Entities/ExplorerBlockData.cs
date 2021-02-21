@@ -7,7 +7,7 @@ namespace WSBC.DiscordBot.Explorer
 {
     /// <summary>Deserialized response of Explorer's /block/ API endpoint.</summary>
     /// <seealso href="https://github.com/arqma/explorer-arqma#apiblockblock_numberblock_hash"/>
-    class ExplorerBlockData
+    public class ExplorerBlockData
     {
         /// <summary>Height of this block.</summary>
         [JsonProperty("block_height")]

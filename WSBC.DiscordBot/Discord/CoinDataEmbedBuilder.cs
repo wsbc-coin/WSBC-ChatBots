@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Discord;
 using Microsoft.Extensions.Options;
+using WSBC.DiscordBot.Explorer;
 
 namespace WSBC.DiscordBot.Discord.Services
 {
@@ -18,14 +19,51 @@ namespace WSBC.DiscordBot.Discord.Services
 
         public Embed Build(CoinData data, IMessage message)
         {
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.Title = data.Name;
+            EmbedBuilder builder = this.CreateDefaultEmbed(message);
+            builder.Title = this._options.CoinName;
             builder.Url = this._options.CoinURL;
             builder.AddField("Current Supply", data.Supply.ToString("0", CultureInfo.InvariantCulture), inline: true);
             builder.AddField("Market Cap", $"${data.MarketCap.ToString("0.00", CultureInfo.InvariantCulture)}", inline: true);
             builder.AddField("BTC Value", data.BtcPrice, inline: true);
-            builder.AddField("Network", BuildNetworkFieldText(data), inline: false);
-            builder.AddField("Last Block", BuildLatestBlockFieldText(data), inline: false);
+            builder.AddField("Network", this.BuildNetworkFieldText(data), inline: false);
+            builder.AddField("Last Block", this.BuildLatestBlockFieldText(data), inline: false);
+
+            return builder.Build();
+        }
+
+        public Embed Build(ExplorerBlockData data, IMessage message)
+        {
+            EmbedBuilder builder = this.CreateDefaultEmbed(message);
+            builder.Title = $"Block {data.Height}";
+            builder.Url = $"http://explorer.wallstreetbetsbros.com/block/{data.Height}";
+            builder.Description = $"***Height***: {data.Height} ({data.TopBlockHeight - data.Height + 1} blocks ago)\n" +
+                $"***Hash***: {data.Hash}\n" +
+                $"***Difficulty***: {data.Difficulty.ToString("N0", CultureInfo.InvariantCulture)}\n" +
+                $"***Reward***: {data.Transactions.First(tx => tx.IsCoinbase).OutputsSum} {this._options.CoinCode}\n" +
+                $"***Size***: {TrimUnits(data.Size, new string[] { "B", "kB", "MB", "GB", "TB", "PB" })}\n" + 
+                $"***Transactions***: {data.Transactions.Count()}\n" +
+                $"***Created***: {(DateTimeOffset.UtcNow - data.Timestamp).ToDisplayString()} ago";
+            return builder.Build();
+        }
+
+        public Embed Build(ExplorerTransactionData data, IMessage message)
+        {
+            EmbedBuilder builder = this.CreateDefaultEmbed(message);
+            builder.Title = $"Transaction {data.Hash}";
+            builder.Url = $"http://explorer.wallstreetbetsbros.com/tx/{data.Hash}";
+            builder.Description = $"***Hash***: {data.Hash}\n" + 
+                $"***Block Height***: {data.BlockHeight} ({data.TopBlockHeight - data.BlockHeight + 1} blocks ago)\n" +
+                $"***Fee***: {data.Fee} {this._options.CoinCode}\n" +
+                $"***Is Reward?***: {(data.IsCoinbase ? $"Yes ({data.OutputsSum} {this._options.CoinCode})" : "No")}\n" +
+                $"***Size***: {TrimUnits(data.Size, new string[] { "B", "kB", "MB", "GB", "TB", "PB" })}\n" +
+                $"***Confirmations***: {data.ConfirmationsCount}\n" +
+                $"***Created***: {(DateTimeOffset.UtcNow - data.Timestamp).ToDisplayString()} ago";
+            return builder.Build();
+        }
+
+        private EmbedBuilder CreateDefaultEmbed(IMessage message)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
             builder.WithThumbnailUrl(this._options.CoinIconURL);
             builder.WithFooter("Data provided by WSBC Explorer and TxBit", this._options.CoinIconURL);
             builder.WithCurrentTimestamp();
@@ -34,10 +72,10 @@ namespace WSBC.DiscordBot.Discord.Services
             if (message != null)
                 builder.WithAuthor(message.Author);
 
-            return builder.Build();
+            return builder;
         }
 
-        private static string BuildNetworkFieldText(CoinData data)
+        private string BuildNetworkFieldText(CoinData data)
         {
             return $"***Hashrate***: {TrimUnits(data.Hashrate, new string[] { "H", "kH", "MH", "GH", "TH", "PH" })}/s\n" +
                 $"***Difficulty***: {data.Difficulty.ToString("N0", CultureInfo.InvariantCulture)}\n" +
@@ -46,10 +84,11 @@ namespace WSBC.DiscordBot.Discord.Services
                 $"***Block Time***: {data.TargetBlockTime}sec";
         }
 
-        private static string BuildLatestBlockFieldText(CoinData data)
+        private string BuildLatestBlockFieldText(CoinData data)
         {
             return $"***Hash***: {data.TopBlockHash}\n" +
-                $"***Reward***: {data.BlockReward} {data.Code}\n" +
+                $"***Height***: {data.BlockHeight - 1}\n" +
+                $"***Reward***: {data.BlockReward} {this._options.CoinCode}\n" +
                 $"***Created***: {(DateTimeOffset.UtcNow - data.LastBlockTime).Value.ToDisplayString()} ago";
         }
 

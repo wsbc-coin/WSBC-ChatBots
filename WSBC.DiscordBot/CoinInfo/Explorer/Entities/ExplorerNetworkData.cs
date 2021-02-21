@@ -6,7 +6,7 @@ namespace WSBC.DiscordBot.Explorer
 {
     /// <summary>Deserialized response of Explorer's /networkinfo API endpoint.</summary>
     /// <seealso href="https://github.com/arqma/explorer-arqma#apinetworkinfo"/>
-    class ExplorerNetworkData
+    public class ExplorerNetworkData
     {
         /// <summary>Count of alt blocks.</summary>
         [JsonProperty("alt_blocks_count")]

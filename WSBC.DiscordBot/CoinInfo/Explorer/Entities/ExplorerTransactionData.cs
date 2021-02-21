@@ -9,7 +9,7 @@ namespace WSBC.DiscordBot.Explorer
     /// <remarks>This class doesn't cointain all info returned by API - for example, inputs and outputs are currently missing.
     /// These values are currently not needed, and supporting some of them would just add complexity.</remarks>
     /// <seealso href="https://github.com/arqma/explorer-arqma#apitransactiontx_hash"/>
-    class ExplorerTransactionData
+    public class ExplorerTransactionData
     {
         /// <summary>Height of the block this transaction is written to.</summary>
         [JsonProperty("block_height")]
