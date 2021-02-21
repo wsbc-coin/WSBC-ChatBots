@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using WSBC.DiscordBot.Utilities;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace WSBC.DiscordBot
@@ -27,7 +28,24 @@ namespace WSBC.DiscordBot
 
                 // load from config if section exists
                 if (configuration.GetSection(_sectionName).Exists())
+                {
                     config.ReadFrom.Configuration(configuration, _sectionName);
+                    // configure datadog
+                    DatadogOptions ddOptions = configuration.GetSection(_sectionName).GetSection("DataDog").Get<DatadogOptions>();
+                    if (!string.IsNullOrWhiteSpace(ddOptions?.ApiKey))
+                    {
+                        config.WriteTo.DatadogLogs(
+                            ddOptions.ApiKey,
+                            source: ".NET",
+                            service: ddOptions.ServiceName ?? "WsbcDiscordBot",
+                            host: ddOptions.HostName ?? Environment.MachineName,
+                            new string[] { },
+                            ddOptions.ToDatadogConfiguration(),
+                            // no need for debug logs in datadag
+                            logLevel: ddOptions.OverrideLogLevel ?? LogEventLevel.Information
+                        );
+                    }
+                }
                 // otherwise use defaults
                 else
                 {
@@ -35,6 +53,7 @@ namespace WSBC.DiscordBot
                         .MinimumLevel.Is(Debugger.IsAttached ? LogEventLevel.Verbose : LogEventLevel.Information)
                         .Enrich.FromLogContext();
                 }
+
 
                 // create the logger
                 Serilog.Log.Logger = config.CreateLogger();
