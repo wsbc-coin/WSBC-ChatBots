@@ -70,7 +70,9 @@ namespace WSBC.DiscordBot.Discord
             bool requirePrefix = msg.Channel is SocketGuildChannel ? options.RequirePublicMessagePrefix : options.RequirePrivateMessagePrefix;
             bool hasStringPrefix = message.HasStringPrefix(options.Prefix, ref argPos);
             bool hasMentionPrefix = false;
-            if (!hasStringPrefix)
+            if (hasStringPrefix)
+                argPos++;   // for string prefix, move pos by 1 so it works with space
+            else
                 hasMentionPrefix = message.HasMentionPrefix(_client.CurrentUser, ref argPos);
 
             // if prefix not found but is required, return
