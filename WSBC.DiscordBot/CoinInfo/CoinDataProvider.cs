@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WSBC.DiscordBot.Explorer;
 using WSBC.DiscordBot.TxBit;
 
 namespace WSBC.DiscordBot.Services
@@ -10,6 +12,7 @@ namespace WSBC.DiscordBot.Services
     class CoinDataProvider : ICoinDataProvider, IDisposable
     {
         private readonly ICoinDataClient<TxBitData> _txbitClient;
+        private readonly IExplorerDataClient _explorerClient;
         private readonly ILogger _log;
         private readonly IOptionsMonitor<CachingOptions> _cachingOptions;
         private readonly SemaphoreSlim _lock;
@@ -18,10 +21,11 @@ namespace WSBC.DiscordBot.Services
         private CoinData _cachedResult;
         private DateTime _lastDownloadTimeUTC;
 
-        public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, ILogger<CoinDataProvider> log, 
-            IOptionsMonitor<CachingOptions> cachingOptions)
+        public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, IExplorerDataClient explorerClient,
+            ILogger<CoinDataProvider> log, IOptionsMonitor<CachingOptions> cachingOptions)
         {
             this._txbitClient = txbitClient;
+            this._explorerClient = explorerClient;
             this._log = log;
             this._cachingOptions = cachingOptions;
             this._lock = new SemaphoreSlim(1, 1);
@@ -41,11 +45,15 @@ namespace WSBC.DiscordBot.Services
 
                 this._log.LogInformation("Downloading all coin data");
 
-                // start downloading: TxBit
+                // start downloading
+                Task<ExplorerNetworkData> explorerNetworkTask = this._explorerClient.GetNetworkDataAsync(cancellationToken);
                 Task<TxBitData> txbitTask = this._txbitClient.GetDataAsync(cancellationToken);
-
-                // await all results
+                // use explorer result to get last block data
+                ExplorerNetworkData explorerNetworkData = await explorerNetworkTask.ConfigureAwait(false);
+                Task<ExplorerBlockData> explorerBlockTask = this._explorerClient.GetBlockDataAsync(explorerNetworkData.TopBlockHash, cancellationToken);
+                // await all remaining data
                 TxBitData txbitData = await txbitTask.ConfigureAwait(false);
+                ExplorerBlockData explorerBlockData = await explorerBlockTask.ConfigureAwait(false);
 
                 // aggregate all data and return
                 this._cachedResult = new CoinData(txbitData.CurrencyName, txbitData.CurrencyCode)
@@ -53,7 +61,14 @@ namespace WSBC.DiscordBot.Services
                     Supply = txbitData.Supply,
                     MarketCap = txbitData.MarketCap,
                     BtcPrice = txbitData.BidPrice,
-                    BlockHeight = txbitData.BlockCount
+                    BlockHeight = explorerNetworkData.BlockHeight,
+                    BlockReward = explorerBlockData.Transactions.First(tx => tx.IsCoinbase).OutputsSum,
+                    Difficulty = explorerNetworkData.Difficulty,
+                    Hashrate = explorerNetworkData.Hashrate,
+                    LastBlockTime = explorerBlockData.Timestamp,
+                    TargetBlockTime = explorerNetworkData.TargetBlockTime,
+                    TopBlockHash = explorerBlockData.Hash,
+                    TransactionsCount = explorerNetworkData.TransactionsCount
                 };
                 this._lastDownloadTimeUTC = DateTime.UtcNow;
                 return this._cachedResult;
