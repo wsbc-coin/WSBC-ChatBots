@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace WSBC.DiscordBot.Discord.Commands
             embed.Url = this._coinOptions.CoinURL;
             embed.Description = $"A bot for checking data about {this._coinOptions.CoinName} and its network!";
             embed.WithAuthor(base.Context.User);
+            embed.WithFooter($"{this._coinOptions.CoinCode} Bot v{GetBotVersion()}", this._coinOptions.CoinIconURL);
 
             // build fields for all commands
             StringBuilder builder = new StringBuilder();
@@ -71,6 +73,12 @@ namespace WSBC.DiscordBot.Discord.Commands
 
             // send response
             await base.ReplyAsync(null, false, embed.Build()).ConfigureAwait(false);
+        }
+
+        private static string GetBotVersion()
+        {
+            FileVersionInfo version = FileVersionInfo.GetVersionInfo(typeof(BotInfoCommands).Assembly.Location);
+            return version.ProductVersion;
         }
     }
 }
