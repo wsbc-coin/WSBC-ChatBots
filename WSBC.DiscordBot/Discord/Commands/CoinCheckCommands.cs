@@ -85,7 +85,7 @@ namespace WSBC.DiscordBot.Discord.Commands
         [Command("transaction")]
         [Alias("tx")]
         [Summary("Gets transaction data")]
-        public async Task TransactionDataAsync([Summary("Unique hash of the transaction")]string hash = null)
+        public async Task TransactionDataAsync([Summary("Unique hash of the transaction")]string hash)
         {
             Task SendErrorAsync()
                 => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve data about transaction `{hash}`.");
