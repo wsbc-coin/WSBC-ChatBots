@@ -4,7 +4,7 @@ Main Discord Bot for WallStreetBets Coin.
 ### Building
 1. Install [.NET 5 Runtime](https://dotnet.microsoft.com/download/dotnet/5.0).
 2. Build the solution.
-3. Publish the solution - [instructions](https://docs.microsoft.com/en-gb/dotnet/core/tutorials/publishing-with-visual-studio).
+3. Publish the "WSBC.DiscordBot" project - [instructions](https://docs.microsoft.com/en-gb/dotnet/core/tutorials/publishing-with-visual-studio).
 
 ### Configuration
 To run, bot requires that you create `appsecrets.json` file with bot secrets. See [appsecrets-example.json](WSBC.DiscordBot/appsecrets-example.json) for examples.  
