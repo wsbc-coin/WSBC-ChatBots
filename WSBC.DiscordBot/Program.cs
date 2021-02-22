@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -18,8 +19,13 @@ namespace WSBC.DiscordBot
 {
     class Program
     {
+        private static IServiceProvider _services;
+
         private static async Task Main(string[] args)
         {
+            // handle exiting
+            AppDomain.CurrentDomain.ProcessExit += (sender, e) => OnExit();
+
             // build configuration
             IConfiguration config = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
@@ -35,12 +41,12 @@ namespace WSBC.DiscordBot
             {
                 // prepare DI container
                 IServiceCollection serviceCollection = ConfigureServices(config);
-                IServiceProvider services = serviceCollection.BuildServiceProvider();
+                _services = serviceCollection.BuildServiceProvider();
 
                 // start Discord.NET client and commands handler
-                ICommandHandler handler = services.GetRequiredService<ICommandHandler>();
+                ICommandHandler handler = _services.GetRequiredService<ICommandHandler>();
                 await handler.InitializeAsync().ConfigureAwait(false);
-                WsbcDiscordClient client = services.GetRequiredService<WsbcDiscordClient>();
+                WsbcDiscordClient client = _services.GetRequiredService<WsbcDiscordClient>();
                 await client.StartClientAsync().ConfigureAwait(false);
 
                 // wait forever to prevent window closing
@@ -48,7 +54,7 @@ namespace WSBC.DiscordBot
             }
             finally
             {
-                Log.CloseAndFlush();
+                OnExit();
             }
         }
 
@@ -90,6 +96,17 @@ namespace WSBC.DiscordBot
                 .Configure<ExplorerOptions>(configuration.GetSection("Explorer"));
 
             return services;
+        }
+
+        private static void OnExit()
+        {
+            try { Log.CloseAndFlush(); } catch { }
+            try
+            {
+                if (_services is IDisposable disposableServices)
+                    disposableServices.Dispose();
+            }
+            catch { }
         }
     }
 }
