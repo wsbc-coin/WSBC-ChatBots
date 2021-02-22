@@ -1,6 +1,7 @@
 # WSBC Discord Bot
 Main Discord Bot for WallStreetBets Coin.
 
+## Usage
 ### Building
 1. Install [.NET 5 Runtime](https://dotnet.microsoft.com/download/dotnet/5.0).
 2. Build the solution.
@@ -22,6 +23,9 @@ Note that variables currently specified in settings file are just the most commo
 
 ### Running
 Run bot using `dotnet WsbcDiscordBot.dll` command. Alternatively if published to .exe, simply run the executable.
+
+## Versioning
+The bot's version will be automatically displayed in its help command. To update version, update Package version in **WSBC.DiscordBot** project, or change value of `<Version>` in [.csproj file](WSBC.DiscordBot/WSBC.DiscordBot.csproj).
 
 ## License
 Copyright (c) 2021 TehGM and WallStreetBetsCoin Developers
