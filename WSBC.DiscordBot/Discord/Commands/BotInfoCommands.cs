@@ -40,8 +40,7 @@ namespace WSBC.DiscordBot.Discord.Commands
             // build fields for all commands
             StringBuilder builder = new StringBuilder();
             IEnumerable<IGrouping<ModuleInfo, CommandInfo>> commands = this._commandService.Commands
-                .OrderBy(c => c.Module.Name)
-                .ThenBy(c => c.Priority).ThenBy(c => c.Name)
+                .OrderBy(c => c.Priority).ThenBy(c => c.Name)
                 .GroupBy(c => c.Module);
             foreach (IGrouping<ModuleInfo, CommandInfo> module in commands)
             {
