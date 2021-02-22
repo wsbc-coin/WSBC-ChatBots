@@ -26,6 +26,7 @@ namespace WSBC.DiscordBot.Discord.Commands
 
         [Command("help")]
         [Summary("Shows this help message")]
+        [Priority(99999)]
         public async Task HelpAsync()
         {
             EmbedBuilder embed = new EmbedBuilder();

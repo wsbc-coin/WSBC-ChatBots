@@ -27,6 +27,7 @@ namespace WSBC.DiscordBot.Discord.Commands
         [Command("coin")]
         [Alias("info")]
         [Summary("Shows current currency and blockchain data.")]
+        [Priority(0)]
         public async Task CoinDataAsync()
         {
             Task SendErrorAsync()
@@ -55,6 +56,7 @@ namespace WSBC.DiscordBot.Discord.Commands
 
         [Command("block")]
         [Summary("Gets block data")]
+        [Priority(1)]
         public async Task BlockDataAsync([Summary("Block height, or block unique hash.")]string block)
         {
             Task SendErrorAsync()
@@ -85,6 +87,7 @@ namespace WSBC.DiscordBot.Discord.Commands
         [Command("transaction")]
         [Alias("tx")]
         [Summary("Gets transaction data")]
+        [Priority(2)]
         public async Task TransactionDataAsync([Summary("Unique hash of the transaction")]string hash)
         {
             Task SendErrorAsync()
