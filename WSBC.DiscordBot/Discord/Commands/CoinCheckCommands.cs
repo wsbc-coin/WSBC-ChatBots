@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -8,6 +7,7 @@ using WSBC.DiscordBot.Explorer;
 
 namespace WSBC.DiscordBot.Discord.Commands
 {
+    [Name("Coin Info")]
     public class CoinCheckCommands : ModuleBase<SocketCommandContext>
     {
         private readonly ICoinDataProvider _dataProvider;
@@ -25,7 +25,8 @@ namespace WSBC.DiscordBot.Discord.Commands
         }
 
         [Command("coin")]
-        [Summary("Shows current currency data")]
+        [Alias("info")]
+        [Summary("Shows current currency and blockchain data.")]
         public async Task CoinDataAsync()
         {
             Task SendErrorAsync()
@@ -54,7 +55,7 @@ namespace WSBC.DiscordBot.Discord.Commands
 
         [Command("block")]
         [Summary("Gets block data")]
-        public async Task BlockDataAsync(string block)
+        public async Task BlockDataAsync([Summary("Block height, or block unique hash.")]string block)
         {
             Task SendErrorAsync()
                 => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve data about block `{block}`.");
@@ -84,7 +85,7 @@ namespace WSBC.DiscordBot.Discord.Commands
         [Command("transaction")]
         [Alias("tx")]
         [Summary("Gets transaction data")]
-        public async Task TransactionDataAsync(string hash)
+        public async Task TransactionDataAsync([Summary("Unique hash of the transaction")]string hash = null)
         {
             Task SendErrorAsync()
                 => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve data about transaction `{hash}`.");

@@ -1,6 +1,6 @@
 ﻿namespace WSBC.DiscordBot
 {
-    class WsbcOptions
+    public class WsbcOptions
     {
         public string CoinName { get; set; } = "WallStreetBets Coin";
         public string CoinCode { get; set; } = "WSBC";

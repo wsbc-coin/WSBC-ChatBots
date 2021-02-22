@@ -5,7 +5,7 @@ using Discord.Commands;
 
 namespace WSBC.DiscordBot.Discord
 {
-    class DiscordOptions
+    public class DiscordOptions
     {
         public string BotToken { get; set; }
 
