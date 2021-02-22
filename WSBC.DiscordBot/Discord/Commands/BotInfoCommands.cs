@@ -26,7 +26,7 @@ namespace WSBC.DiscordBot.Discord.Commands
 
         [Command("help")]
         [Summary("Shows this help message")]
-        [Priority(99999)]
+        [Priority(-99999)]
         public async Task HelpAsync()
         {
             EmbedBuilder embed = new EmbedBuilder();
@@ -40,7 +40,7 @@ namespace WSBC.DiscordBot.Discord.Commands
             // build fields for all commands
             StringBuilder builder = new StringBuilder();
             IEnumerable<IGrouping<ModuleInfo, CommandInfo>> commands = this._commandService.Commands
-                .OrderBy(c => c.Priority).ThenBy(c => c.Name)
+                .OrderByDescending(c => c.Priority).ThenBy(c => c.Name)
                 .GroupBy(c => c.Module);
             foreach (IGrouping<ModuleInfo, CommandInfo> module in commands)
             {
