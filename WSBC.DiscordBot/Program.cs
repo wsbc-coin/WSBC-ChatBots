@@ -11,6 +11,8 @@ using WSBC.DiscordBot.Discord;
 using WSBC.DiscordBot.Discord.Services;
 using WSBC.DiscordBot.Explorer;
 using WSBC.DiscordBot.Explorer.Services;
+using WSBC.DiscordBot.Memes;
+using WSBC.DiscordBot.Memes.Services;
 using WSBC.DiscordBot.Services;
 using WSBC.DiscordBot.TxBit;
 using WSBC.DiscordBot.TxBit.Services;
@@ -94,6 +96,10 @@ namespace WSBC.DiscordBot
             // - Explorer
             services.AddTransient<IExplorerDataClient, ExplorerDataClient>()
                 .Configure<ExplorerOptions>(configuration.GetSection("Explorer"));
+
+            // Memes feature
+            services.AddTransient<IRandomFilePicker, RandomFilePicker>()
+                .Configure<MemesOptions>(configuration.GetSection("Memes"));
 
             return services;
         }
