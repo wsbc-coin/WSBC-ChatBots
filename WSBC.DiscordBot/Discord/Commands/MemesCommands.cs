@@ -26,7 +26,7 @@ namespace WSBC.DiscordBot.Discord.Commands
         [Summary("Shows the Lambo you'll buy with WSBC! \uD83D\uDE0E")]
         public Task CmdLamboAsync()
             => SendRandomFileAsync(_memesOptions.LamboPath,
-                $"{Emote.Parse("<:emoji_51:808859069779279883>")} Lambo for you, {MentionUtils.MentionUser(base.Context.User.Id)}! \uD83D\uDE0E");
+                $"<:emoji_51:808859069779279883> Lambo for you, {MentionUtils.MentionUser(base.Context.User.Id)}! \uD83D\uDE0E");
 
         private async Task SendRandomFileAsync(string path, string text)
         {

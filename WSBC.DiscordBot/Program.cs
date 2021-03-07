@@ -13,6 +13,8 @@ using WSBC.DiscordBot.Explorer;
 using WSBC.DiscordBot.Explorer.Services;
 using WSBC.DiscordBot.Memes;
 using WSBC.DiscordBot.Memes.Services;
+using WSBC.DiscordBot.MiningPoolStats;
+using WSBC.DiscordBot.MiningPoolStats.Services;
 using WSBC.DiscordBot.Services;
 using WSBC.DiscordBot.TxBit;
 using WSBC.DiscordBot.TxBit.Services;
@@ -83,7 +85,7 @@ namespace WSBC.DiscordBot
                 .AddSingleton<IDiscordClient>(s => s.GetRequiredService<DiscordSocketClient>())
                 // - Command service
                 .AddSingleton<ICommandHandler, SimpleCommandHandler>()
-                // embed builder
+                // - Embed builder
                 .AddTransient<ICoinDataEmbedBuilder, CoinDataEmbedBuilder>()
                 // - Config
                 .Configure<DiscordOptions>(configuration.GetSection("Discord"));
@@ -96,6 +98,9 @@ namespace WSBC.DiscordBot
             // - Explorer
             services.AddTransient<IExplorerDataClient, ExplorerDataClient>()
                 .Configure<ExplorerOptions>(configuration.GetSection("Explorer"));
+            // - MiningPoolStats
+            services.AddTransient<ICoinDataClient<MiningPoolStatsData>, MiningPoolStatsDataClient>()
+                .Configure<MiningPoolStatsOptions>(configuration.GetSection("MiningPoolStats"));
 
             // Memes feature
             services.AddTransient<IRandomFilePicker, RandomFilePicker>()

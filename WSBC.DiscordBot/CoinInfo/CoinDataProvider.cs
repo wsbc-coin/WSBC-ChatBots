@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WSBC.DiscordBot.Explorer;
+using WSBC.DiscordBot.MiningPoolStats;
 using WSBC.DiscordBot.TxBit;
 
 namespace WSBC.DiscordBot.Services
@@ -12,35 +13,41 @@ namespace WSBC.DiscordBot.Services
     class CoinDataProvider : ICoinDataProvider, IDisposable
     {
         private readonly ICoinDataClient<TxBitData> _txbitClient;
+        private readonly ICoinDataClient<MiningPoolStatsData> _poolStatsClient;
         private readonly IExplorerDataClient _explorerClient;
         private readonly ILogger _log;
         private readonly IOptionsMonitor<CachingOptions> _cachingOptions;
-        private readonly SemaphoreSlim _lock;
+        private readonly SemaphoreSlim _coinLock;
+        private readonly SemaphoreSlim _poolsLock;
 
         // cached data
-        private CoinData _cachedResult;
-        private DateTime _lastDownloadTimeUTC;
+        private CoinData _cachedCoinData;
+        private DateTime _coinDateCacheTimeUTC;
+        private MiningPoolStatsData _cachedPoolStatsData;
+        private DateTime _poolStatsDataCacheTimeUTC;
 
-        public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, IExplorerDataClient explorerClient,
+        public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, ICoinDataClient<MiningPoolStatsData> poolStatsClient, IExplorerDataClient explorerClient,
             ILogger<CoinDataProvider> log, IOptionsMonitor<CachingOptions> cachingOptions)
         {
             this._txbitClient = txbitClient;
             this._explorerClient = explorerClient;
+            this._poolStatsClient = poolStatsClient;
             this._log = log;
             this._cachingOptions = cachingOptions;
-            this._lock = new SemaphoreSlim(1, 1);
+            this._coinLock = new SemaphoreSlim(1, 1);
+            this._poolsLock = new SemaphoreSlim(1, 1);
         }
 
         public async Task<CoinData> GetDataAsync(CancellationToken cancellationToken = default)
         {
-            await this._lock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await this._coinLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 // attempt to get cached first to avoid hammering APIs
-                if (_cachedResult != null && DateTime.UtcNow < this._lastDownloadTimeUTC + this._cachingOptions.CurrentValue.DataCacheLifetime)
+                if (_cachedCoinData != null && DateTime.UtcNow < this._coinDateCacheTimeUTC + this._cachingOptions.CurrentValue.DataCacheLifetime)
                 {
                     this._log.LogTrace("Found valid cached coin data, skipping APIs request");
-                    return _cachedResult;
+                    return _cachedCoinData;
                 }
 
                 this._log.LogInformation("Downloading all coin data");
@@ -58,7 +65,7 @@ namespace WSBC.DiscordBot.Services
                 ExplorerEmissionData explorerEmissionData = await explorerEmissionTask.ConfigureAwait(false);
 
                 // aggregate all data and return
-                this._cachedResult = new CoinData(txbitData.CurrencyName, txbitData.CurrencyCode)
+                this._cachedCoinData = new CoinData(txbitData.CurrencyName, txbitData.CurrencyCode)
                 {
                     Supply = explorerEmissionData.CirculatingSupply,
                     MarketCap = txbitData.MarketCap,
@@ -72,18 +79,41 @@ namespace WSBC.DiscordBot.Services
                     TopBlockHash = explorerBlockData.Hash,
                     TransactionsCount = explorerNetworkData.TransactionsCount
                 };
-                this._lastDownloadTimeUTC = DateTime.UtcNow;
-                return this._cachedResult;
+                this._coinDateCacheTimeUTC = DateTime.UtcNow;
+                return this._cachedCoinData;
             }
             finally
             {
-                try { this._lock.Release(); } catch { }
+                try { this._coinLock.Release(); } catch { }
+            }
+        }
+
+        public async Task<MiningPoolStatsData> GetPoolsDataAsync(CancellationToken cancellationToken = default)
+        {
+            await this._poolsLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                // attempt to get cached first to avoid hammering APIs
+                if (_cachedPoolStatsData != null && DateTime.UtcNow < this._poolStatsDataCacheTimeUTC + this._cachingOptions.CurrentValue.MiningPoolStatsDataCacheLifetime)
+                {
+                    this._log.LogTrace("Found valid cached pools data, skipping APIs request");
+                    return _cachedPoolStatsData;
+                }
+
+                this._log.LogInformation("Downloading all pools data");
+                this._cachedPoolStatsData = await _poolStatsClient.GetDataAsync(cancellationToken).ConfigureAwait(false);
+                this._poolStatsDataCacheTimeUTC = DateTime.UtcNow;
+                return this._cachedPoolStatsData;
+            }
+            finally
+            {
+                try { this._poolsLock.Release(); } catch { }
             }
         }
 
         public void Dispose()
         {
-            try { this._lock?.Dispose(); } catch { }
+            try { this._coinLock?.Dispose(); } catch { }
         }
     }
 }
