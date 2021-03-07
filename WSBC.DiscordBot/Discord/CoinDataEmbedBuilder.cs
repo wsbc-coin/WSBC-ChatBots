@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Discord;
 using Microsoft.Extensions.Options;
 using WSBC.DiscordBot.Explorer;
+using WSBC.DiscordBot.MiningPoolStats;
 
 namespace WSBC.DiscordBot.Discord.Services
 {
     class CoinDataEmbedBuilder : ICoinDataEmbedBuilder
     {
+        private readonly MiningPoolStatsOptions _poolStatsOptions;
         private readonly WsbcOptions _options;
 
-        public CoinDataEmbedBuilder(IOptionsSnapshot<WsbcOptions> options)
+        public CoinDataEmbedBuilder(IOptionsSnapshot<WsbcOptions> options, IOptionsSnapshot<MiningPoolStatsOptions> poolStatsOptions)
         {
             this._options = options.Value;
+            this._poolStatsOptions = poolStatsOptions.Value;
         }
 
         public Embed Build(CoinData data, IMessage message)
@@ -61,6 +65,25 @@ namespace WSBC.DiscordBot.Discord.Services
             return builder.Build();
         }
 
+        public Embed Build(MiningPoolStatsData data, IMessage message)
+        {
+            EmbedBuilder builder = this.CreateDefaultEmbed(message);
+            builder.WithFooter("Data provided by PoolMiningStats", this._options.CoinIconURL);
+            builder.WithTimestamp(data.Timestamp);
+            StringBuilder poolListBuilder = new StringBuilder();
+            int i = 0;
+            foreach (MiningPoolStatsData.PoolData pool in data.Pools.OrderByDescending(p => p.Hashrate).Take(10))
+                poolListBuilder.AppendFormat("{0}. ***[{1}]({2})*** - **{3}**, Luck: *{4}%*, Workers: *{5}*\n",
+                    ++i, pool.Name, pool.URL, BuildHashrateString(pool.Hashrate), pool.Luck.ToString("0.#", CultureInfo.InvariantCulture), pool.WorkersCount);
+            builder.AddField("Top Pools", poolListBuilder.ToString(), inline: false);
+            builder.AddField("Important note",
+                "Everyone joining the same pool does this coin no good. To better support this project (and lambos <:emoji_51:808859069779279883>), please consider NOT joining the top pool.\n" +
+                "By spreading across numerous pools, you support decentralization - this will make the coin be worth much more! <:emoji_54:808859529071820820>", inline: false);
+            builder.AddField("Need more info?",
+                $"For more information about mining pools, as well as non-top mining pools, check out [PoolMiningStats Website]({this._poolStatsOptions.WebsiteURL})!", inline: false);
+            return builder.Build();
+        }
+
         private EmbedBuilder CreateDefaultEmbed(IMessage message)
         {
             EmbedBuilder builder = new EmbedBuilder();
@@ -77,7 +100,7 @@ namespace WSBC.DiscordBot.Discord.Services
 
         private string BuildNetworkFieldText(CoinData data)
         {
-            return $"***Hashrate***: {TrimUnits(data.Hashrate, new string[] { "H", "kH", "MH", "GH", "TH", "PH" })}/s\n" +
+            return $"***Hashrate***: {BuildHashrateString(data.Hashrate)}/s\n" +
                 $"***Difficulty***: {data.Difficulty.ToString("N0", CultureInfo.InvariantCulture)}\n" +
                 $"***Block Height***: {data.BlockHeight}\n" +
                 $"***Transactions***: {data.TransactionsCount.ToString("N0", CultureInfo.InvariantCulture)}\n" +
@@ -91,6 +114,9 @@ namespace WSBC.DiscordBot.Discord.Services
                 $"***Reward***: {data.BlockReward} {this._options.CoinCode}\n" +
                 $"***Created***: {(DateTimeOffset.UtcNow - data.LastBlockTime).Value.ToDisplayString()} ago";
         }
+
+        private static string BuildHashrateString(long hashrate)
+            => $"{TrimUnits(hashrate, new string[] { "H", "kH", "MH", "GH", "TH", "PH" })}/s";
 
         private static string TrimUnits(double value, ICollection<string> units)
         {

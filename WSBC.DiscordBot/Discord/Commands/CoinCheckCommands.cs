@@ -4,6 +4,7 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
 using WSBC.DiscordBot.Explorer;
+using WSBC.DiscordBot.MiningPoolStats;
 
 namespace WSBC.DiscordBot.Discord.Commands
 {
@@ -28,7 +29,7 @@ namespace WSBC.DiscordBot.Discord.Commands
         [Alias("info")]
         [Summary("Shows current currency and blockchain data.")]
         [Priority(10)]
-        public async Task CoinDataAsync()
+        public async Task CmdCoinDataAsync()
         {
             Task SendErrorAsync()
                 => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve coin data.");
@@ -55,9 +56,9 @@ namespace WSBC.DiscordBot.Discord.Commands
         }
 
         [Command("block")]
-        [Summary("Gets block data")]
+        [Summary("Gets block data.")]
         [Priority(9)]
-        public async Task BlockDataAsync([Summary("Block height, or block unique hash.")]string block)
+        public async Task CmdBlockDataAsync([Summary("Block height, or block unique hash.")]string block)
         {
             Task SendErrorAsync()
                 => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve data about block `{block}`.");
@@ -86,9 +87,9 @@ namespace WSBC.DiscordBot.Discord.Commands
 
         [Command("transaction")]
         [Alias("tx")]
-        [Summary("Gets transaction data")]
+        [Summary("Gets transaction data.")]
         [Priority(8)]
-        public async Task TransactionDataAsync([Summary("Unique hash of the transaction")]string hash)
+        public async Task CmdTransactionDataAsync([Summary("Unique hash of the transaction")]string hash)
         {
             Task SendErrorAsync()
                 => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve data about transaction `{hash}`.");
@@ -99,6 +100,36 @@ namespace WSBC.DiscordBot.Discord.Commands
             try
             {
                 data = await this._explorerClient.GetTransactionDataAsync(hash).ConfigureAwait(false);
+                if (data == null)
+                {
+                    await SendErrorAsync().ConfigureAwait(false);
+                    return;
+                }
+            }
+            catch
+            {
+                await SendErrorAsync().ConfigureAwait(false);
+                throw;
+            }
+
+            Embed embed = this._embedBuilder.Build(data, base.Context.Message);
+            await base.Context.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+        }
+
+        [Command("pools")]
+        [Summary("Gets mining pools data.")]
+        [Priority(7)]
+        public async Task CmdPoolsDataAsync()
+        {
+            Task SendErrorAsync()
+                => base.Context.Channel.SendMessageAsync($"\u274C Couldn't retrieve data about mining pools.");
+
+            using IDisposable logScope = this._log.BeginCommandScope(base.Context, this);
+
+            MiningPoolStatsData data;
+            try
+            {
+                data = await this._dataProvider.GetPoolsDataAsync().ConfigureAwait(false);
                 if (data == null)
                 {
                     await SendErrorAsync().ConfigureAwait(false);
