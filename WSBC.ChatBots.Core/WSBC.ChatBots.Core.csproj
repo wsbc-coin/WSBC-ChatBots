@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -10,6 +10,7 @@
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/wsbc-coin/WSBC-DiscordBot</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <RootNamespace>WSBC.ChatBots</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
