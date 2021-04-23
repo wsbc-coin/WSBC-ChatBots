@@ -29,11 +29,11 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._cts = new CancellationTokenSource();
 
 
-            this._handler.Register("/lambo", "Shows the Lambo you'll buy with WSBT!", CmdLambo);
+            this._handler.Register("/lambo", "Shows the Lambo you'll buy with WSBT! \uD83D\uDE0E", CmdLambo);
         }
 
         private void CmdLambo(ITelegramBotClient client, Message msg)
-            => _ = this.SendRandomFileAsync(_memesOptions.CurrentValue.LamboPath, $"Lambo for you, @{msg.From.Username}!", client, msg);
+            => _ = this.SendRandomFileAsync(_memesOptions.CurrentValue.LamboPath, $"Lambo for you, @{msg.From.Username}! \uD83D\uDE0E", client, msg);
 
         private async Task SendRandomFileAsync(string path, string text, ITelegramBotClient client, Message msg)
         {

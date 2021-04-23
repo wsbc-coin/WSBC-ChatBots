@@ -91,7 +91,7 @@ namespace WSBC.ChatBots.Telegram.Commands
         }
 
         private Task SendFailedRetrievingAsync(ITelegramBotClient client, Message msg)
-            => client.SendTextMessageAsync(msg.Chat.Id, "Failed retrieving token data", cancellationToken: this._cts.Token);
+            => client.SendTextMessageAsync(msg.Chat.Id, "\u274C Failed retrieving token data", cancellationToken: this._cts.Token);
 
         public void Dispose()
         {
