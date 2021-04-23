@@ -8,6 +8,7 @@ using Serilog;
 using WSBC.ChatBots.Discord.Services;
 using WSBC.ChatBots.Coin;
 using WSBC.ChatBots.Utilities;
+using WSBC.ChatBots.Token;
 
 namespace WSBC.ChatBots.Discord
 {
@@ -54,6 +55,8 @@ namespace WSBC.ChatBots.Discord
             // global coin options
             IConfigurationSection coinSection = configuration.GetSection("Coin");
             services.Configure<CoinOptions>(coinSection);
+            IConfigurationSection tokenSection = configuration.GetSection("Token");
+            services.Configure<TokenOptions>(tokenSection);
 
             // Logging
             services.AddSerilogLogging();
@@ -71,8 +74,13 @@ namespace WSBC.ChatBots.Discord
                 // - Config
                 .Configure<DiscordOptions>(configuration.GetSection("Discord"));
 
+            // Token Data
+            services
+                .AddDexGuruClient(configuration: tokenSection.GetSection("DexGuru"))
+                .AddTokenData();
+
             // Coin Data
-            services.AddHttpClient()
+            services
                 .AddTxBitClient(configuration: coinSection.GetSection("TxBit"))
                 .AddMiningPoolStatsClient(configuration: coinSection.GetSection("MiningPoolStats"))
                 .AddBlockchainExplorerClient(configuration: coinSection.GetSection("Explorer"))
