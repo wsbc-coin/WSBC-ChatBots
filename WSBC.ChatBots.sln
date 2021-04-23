@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WSBC.ChatBots.Discord", "WSBC.ChatBots.Discord\WSBC.ChatBots.Discord.csproj", "{F13C98ED-AF28-477D-92D1-E742C5631D08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{976A0B21-F0F5-479C-8761-2A7102B4DB49}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WSBC.ChatBots.Core", "WSBC.ChatBots.Core\WSBC.ChatBots.Core.csproj", "{29B50281-7594-44DA-B55F-79D020FB43EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSBC.ChatBots.Telegram", "WSBC.ChatBots.Telegram\WSBC.ChatBots.Telegram.csproj", "{CE603FBB-866F-48E9-834D-D56F05CA4AA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F13C98ED-AF28-477D-92D1-E742C5631D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13C98ED-AF28-477D-92D1-E742C5631D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13C98ED-AF28-477D-92D1-E742C5631D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13C98ED-AF28-477D-92D1-E742C5631D08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B50281-7594-44DA-B55F-79D020FB43EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B50281-7594-44DA-B55F-79D020FB43EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B50281-7594-44DA-B55F-79D020FB43EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B50281-7594-44DA-B55F-79D020FB43EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE603FBB-866F-48E9-834D-D56F05CA4AA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE603FBB-866F-48E9-834D-D56F05CA4AA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE603FBB-866F-48E9-834D-D56F05CA4AA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE603FBB-866F-48E9-834D-D56F05CA4AA1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3223CA65-759E-4D86-97B4-F148103B1961}
+	EndGlobalSection
+EndGlobal

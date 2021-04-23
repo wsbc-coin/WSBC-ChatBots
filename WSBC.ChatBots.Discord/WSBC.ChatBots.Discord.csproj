@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>WSBC.ChatBots.Discord</RootNamespace>
+    <AssemblyName>WSBC.ChatBots.Discord</AssemblyName>
+    <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
+    <Company>WallStreetBetsCoin</Company>
+    <Version>1.2.0</Version>
+    <Product>WSBC.ChatBots.Discord</Product>
+    <PackageId>WSBC.ChatBots.Discord</PackageId>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <Copyright>Copyright (c) 2021 TehGM and WallStreetBetsCoin Developers</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <Description>Main Discord Bot for WallStreetBets Coin.</Description>
+    <RepositoryUrl>https://github.com/wsbc-coin/WSBC-DiscordBot</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsecrets.json" />
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsecrets.json" Condition="Exists('appsecrets.json')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WSBC.ChatBots.Core\WSBC.ChatBots.Core.csproj" />
+  </ItemGroup>
+
+</Project>
