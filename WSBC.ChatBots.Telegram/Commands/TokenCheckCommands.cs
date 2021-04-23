@@ -61,7 +61,7 @@ namespace WSBC.ChatBots.Telegram.Commands
                 await client.SendTextMessageAsync(msg.Chat.Id, $"1 WSBT = <b>${data.PriceUSD.ToString(_priceFormatShort, _priceFormatProvider)}</b> ({data.PriceETH.ToString(_priceFormatLong, _priceFormatProvider)} ETH)<pre> </pre>24h change: {data.PriceChange:0.##%}",
                     ParseMode.Html, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex) when (ex.LogAsError(this._log, "Exception occured when retrieving token data"))
             {
                 await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
             }
@@ -84,7 +84,7 @@ namespace WSBC.ChatBots.Telegram.Commands
 24h change: {data.VolumeChange:0.##%}",
                     ParseMode.Markdown, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex) when (ex.LogAsError(this._log, "Exception occured when retrieving token data"))
             {
                 await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
             }
