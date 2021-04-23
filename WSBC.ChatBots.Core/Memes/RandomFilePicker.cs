@@ -3,7 +3,7 @@ using System.IO;
 
 namespace WSBC.ChatBots.Memes.Services
 {
-    public class RandomFilePicker : IRandomFilePicker
+    internal class RandomFilePicker : IRandomFilePicker
     {
         public string Pick(string path, string searchPattern, SearchOption searchOption)
         {

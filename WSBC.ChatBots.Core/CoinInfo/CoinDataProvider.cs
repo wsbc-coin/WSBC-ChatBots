@@ -10,7 +10,7 @@ using WSBC.ChatBots.Coin.TxBit;
 
 namespace WSBC.ChatBots.Coin.Services
 {
-    public class CoinDataProvider : ICoinDataProvider, IDisposable
+    internal class CoinDataProvider : ICoinDataProvider, IDisposable
     {
         private readonly ICoinDataClient<TxBitData> _txbitClient;
         private readonly ICoinDataClient<MiningPoolStatsData> _poolStatsClient;

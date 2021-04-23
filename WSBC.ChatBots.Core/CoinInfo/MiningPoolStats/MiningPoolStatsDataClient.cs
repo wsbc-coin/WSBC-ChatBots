@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace WSBC.ChatBots.Coin.MiningPoolStats.Services
 {
-    public class MiningPoolStatsDataClient : ICoinDataClient<MiningPoolStatsData>
+    internal class MiningPoolStatsDataClient : ICoinDataClient<MiningPoolStatsData>
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger _log;

@@ -67,14 +67,10 @@ namespace WSBC.ChatBots.Discord
 
             // global coin options
             services.Configure<WsbcOptions>(configuration);
-
-            // data aggregator
-            services.AddSingleton<ICoinDataProvider, CoinDataProvider>()
-                .Configure<CachingOptions>(configuration.GetSection("Caching"));
+            services.Configure<CachingOptions>(configuration.GetSection("Caching"));
 
             // Logging
-            services.AddSingleton<ILoggerFactory>(new LoggerFactory()
-                        .AddSerilog(Log.Logger, dispose: true));
+            services.AddSerilogLogging();
 
             // Discord.NET
             services
@@ -89,21 +85,15 @@ namespace WSBC.ChatBots.Discord
                 // - Config
                 .Configure<DiscordOptions>(configuration.GetSection("Discord"));
 
-            // Clients
-            services.AddHttpClient();
-            // - TxBit
-            services.AddTransient<ICoinDataClient<TxBitData>, TxBitDataClient>()
-                .Configure<TxBitOptions>(configuration.GetSection("TxBit"));
-            // - Explorer
-            services.AddTransient<IExplorerDataClient, ExplorerDataClient>()
-                .Configure<ExplorerOptions>(configuration.GetSection("Explorer"));
-            // - MiningPoolStats
-            services.AddTransient<ICoinDataClient<MiningPoolStatsData>, MiningPoolStatsDataClient>()
-                .Configure<MiningPoolStatsOptions>(configuration.GetSection("MiningPoolStats"));
+            // Coin Data
+            services.AddHttpClient()
+                .AddTxBitClient(configuration: configuration.GetSection("TxBit"))
+                .AddMiningPoolStatsClient(configuration: configuration.GetSection("MiningPoolStats"))
+                .AddBlockchainExplorerClient(configuration: configuration.GetSection("Explorer"))
+                .AddCoinData();
 
             // Memes feature
-            services.AddTransient<IRandomFilePicker, RandomFilePicker>()
-                .Configure<MemesOptions>(configuration.GetSection("Memes"));
+            services.AddMemes(configuration: configuration.GetSection("Memes"));
 
             return services;
         }

@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace WSBC.ChatBots.Coin.Explorer.Services
 {
-    public class ExplorerDataClient : IExplorerDataClient
+    internal class ExplorerDataClient : IExplorerDataClient
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger _log;
