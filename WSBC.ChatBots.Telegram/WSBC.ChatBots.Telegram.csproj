@@ -27,4 +27,8 @@
     <ProjectReference Include="..\WSBC.ChatBots.Core\WSBC.ChatBots.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
+
 </Project>

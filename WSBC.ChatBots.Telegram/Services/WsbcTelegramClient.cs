@@ -64,18 +64,15 @@ namespace WSBC.ChatBots.Telegram.Services
 
         private void OnMessage(object sender, MessageEventArgs e)
         {
-            if (this._log.IsEnabled(LogLevel.Trace))
+            using IDisposable logScope = this._log.BeginScope(new Dictionary<string, object>()
             {
-                using IDisposable logScope = this._log.BeginScope(new Dictionary<string, object>()
-                {
-                    { "Type", e.Message.Type },
-                    { "ID", e.Message.MessageId },
-                    { "Text", e.Message.Text },
-                    { "SenderID", e.Message.From.Id },
-                    { "ChannelID", e.Message.Chat.Id }
-                });
-                this._log.LogTrace("{Type} message {ID} received");
-            }
+                { "Type", e.Message.Type },
+                { "ID", e.Message.MessageId },
+                { "Text", e.Message.Text },
+                { "SenderID", e.Message.From.Id },
+                { "ChannelID", e.Message.Chat.Id }
+            });
+            this._log.LogTrace("{Type} message {ID} received");
             this.MessageReceived?.Invoke(this, e);
         }
 
