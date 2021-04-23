@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WSBC.ChatBots.Core\WSBC.ChatBots.Core.csproj" />
+    <PackageReference Include="Telegram.Bot" Version="15.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\WSBC.ChatBots.Core\WSBC.ChatBots.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using WSBC.ChatBots.Telegram.Services;
 using WSBC.ChatBots.Utilities;
 
 namespace WSBC.ChatBots.Telegram
@@ -28,7 +29,9 @@ namespace WSBC.ChatBots.Telegram
                 IServiceCollection serviceCollection = ConfigureServices(config);
                 _services = serviceCollection.BuildServiceProvider();
 
-                // TODO: start Telegram.Bot client and commands handler
+                // start Telegram.Bot client
+                ITelegramClient telegramClient = _services.GetRequiredService<ITelegramClient>();
+                telegramClient.Start();
 
                 // wait forever to prevent window closing
                 await Task.Delay(-1).ConfigureAwait(false);
@@ -46,7 +49,9 @@ namespace WSBC.ChatBots.Telegram
             // Logging
             services.AddSerilogLogging();
 
-            // TODO: Telegram.Bot
+            //  Telegram.Bot
+            services.AddSingleton<ITelegramClient, WsbcTelegramClient>()
+                .Configure<TelegramOptions>(configuration.GetSection("Telegram"));
 
             // Memes feature
             services.AddMemes(configuration: configuration.GetSection("Memes"));
