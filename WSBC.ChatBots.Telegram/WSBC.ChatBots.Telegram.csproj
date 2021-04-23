@@ -4,6 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>WSBC.ChatBots.Telegram</AssemblyName>
+    <Version>1.2.0</Version>
+    <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
+    <Company>WallStreetBetsCoin</Company>
+    <Description>Main Telegram Bot for WallStreetBets Coin and Token.</Description>
+    <Copyright>Copyright (c) 2021 TehGM and WallStreetBetsCoin Developers</Copyright>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/wsbc-coin/WSBC-DiscordBot</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
