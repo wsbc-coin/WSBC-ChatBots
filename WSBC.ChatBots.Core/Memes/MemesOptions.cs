@@ -2,6 +2,6 @@
 {
     public class MemesOptions
     {
-        public string LamboPath { get; set; } = "/root/Lambo";
+        public string LamboPath { get; set; } = "/home/WsbcBots/lambo";
     }
 }
