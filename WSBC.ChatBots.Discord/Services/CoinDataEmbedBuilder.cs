@@ -14,9 +14,9 @@ namespace WSBC.ChatBots.Discord.Services
     class CoinDataEmbedBuilder : ICoinDataEmbedBuilder
     {
         private readonly MiningPoolStatsOptions _poolStatsOptions;
-        private readonly WsbcOptions _options;
+        private readonly CoinOptions _options;
 
-        public CoinDataEmbedBuilder(IOptionsSnapshot<WsbcOptions> options, IOptionsSnapshot<MiningPoolStatsOptions> poolStatsOptions)
+        public CoinDataEmbedBuilder(IOptionsSnapshot<CoinOptions> options, IOptionsSnapshot<MiningPoolStatsOptions> poolStatsOptions)
         {
             this._options = options.Value;
             this._poolStatsOptions = poolStatsOptions.Value;
@@ -44,7 +44,7 @@ namespace WSBC.ChatBots.Discord.Services
             builder.Description = $"***Height***: {data.Height} ({data.TopBlockHeight - data.Height + 1} blocks ago)\n" +
                 $"***Hash***: {data.Hash}\n" +
                 $"***Difficulty***: {data.Difficulty.ToString("N0", CultureInfo.InvariantCulture)}\n" +
-                $"***Reward***: {data.Transactions.First(tx => tx.IsCoinbase).OutputsSum} {this._options.CoinCode}\n" +
+                $"***Reward***: {data.Transactions.First(tx => tx.IsCoinbase).OutputsSum} {this._options.CoinTicker}\n" +
                 $"***Size***: {TrimUnits(data.Size, new string[] { "B", "kB", "MB", "GB", "TB", "PB" })}\n" + 
                 $"***Transactions***: {data.Transactions.Count()}\n" +
                 $"***Created***: {(DateTimeOffset.UtcNow - data.Timestamp).ToDisplayString()} ago";
@@ -58,8 +58,8 @@ namespace WSBC.ChatBots.Discord.Services
             builder.Url = $"http://explorer.wallstreetbetsbros.com/tx/{data.Hash}";
             builder.Description = $"***Hash***: {data.Hash}\n" + 
                 $"***Block Height***: {data.BlockHeight} ({data.TopBlockHeight - data.BlockHeight + 1} blocks ago)\n" +
-                $"***Fee***: {data.Fee} {this._options.CoinCode}\n" +
-                $"***Is Reward?***: {(data.IsCoinbase ? $"Yes ({data.OutputsSum} {this._options.CoinCode})" : "No")}\n" +
+                $"***Fee***: {data.Fee} {this._options.CoinTicker}\n" +
+                $"***Is Reward?***: {(data.IsCoinbase ? $"Yes ({data.OutputsSum} {this._options.CoinTicker})" : "No")}\n" +
                 $"***Size***: {TrimUnits(data.Size, new string[] { "B", "kB", "MB", "GB", "TB", "PB" })}\n" +
                 $"***Confirmations***: {data.ConfirmationsCount}\n" +
                 $"***Created***: {(DateTimeOffset.UtcNow - data.Timestamp).ToDisplayString()} ago";
@@ -112,7 +112,7 @@ namespace WSBC.ChatBots.Discord.Services
         {
             return $"***Hash***: {data.TopBlockHash}\n" +
                 $"***Height***: {data.BlockHeight - 1}\n" +
-                $"***Reward***: {data.BlockReward} {this._options.CoinCode}\n" +
+                $"***Reward***: {data.BlockReward} {this._options.CoinTicker}\n" +
                 $"***Created***: {(DateTimeOffset.UtcNow - data.LastBlockTime).Value.ToDisplayString()} ago";
         }
 

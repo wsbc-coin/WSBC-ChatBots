@@ -66,8 +66,8 @@ namespace WSBC.ChatBots.Discord
             IServiceCollection services = new ServiceCollection();
 
             // global coin options
-            services.Configure<WsbcOptions>(configuration);
-            services.Configure<CachingOptions>(configuration.GetSection("Caching"));
+            IConfigurationSection coinSection = configuration.GetSection("Coin");
+            services.Configure<CoinOptions>(coinSection);
 
             // Logging
             services.AddSerilogLogging();
@@ -87,9 +87,9 @@ namespace WSBC.ChatBots.Discord
 
             // Coin Data
             services.AddHttpClient()
-                .AddTxBitClient(configuration: configuration.GetSection("TxBit"))
-                .AddMiningPoolStatsClient(configuration: configuration.GetSection("MiningPoolStats"))
-                .AddBlockchainExplorerClient(configuration: configuration.GetSection("Explorer"))
+                .AddTxBitClient(configuration: coinSection.GetSection("TxBit"))
+                .AddMiningPoolStatsClient(configuration: coinSection.GetSection("MiningPoolStats"))
+                .AddBlockchainExplorerClient(configuration: coinSection.GetSection("Explorer"))
                 .AddCoinData();
 
             // Memes feature

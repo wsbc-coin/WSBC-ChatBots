@@ -12,11 +12,11 @@ namespace WSBC.ChatBots.Coin.TxBit.Services
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger _log;
-        private readonly WsbcOptions _wsbcOptions;
+        private readonly CoinOptions _wsbcOptions;
         private readonly TxBitOptions _txbitOptions;
 
         public TxBitDataClient(IHttpClientFactory clientFactory, ILogger<TxBitDataClient> log,
-            IOptionsSnapshot<WsbcOptions> wsbcOptions, IOptionsSnapshot<TxBitOptions> txbitOptions)
+            IOptionsSnapshot<CoinOptions> wsbcOptions, IOptionsSnapshot<TxBitOptions> txbitOptions)
         {
             this._clientFactory = clientFactory;
             this._log = log;
@@ -28,7 +28,7 @@ namespace WSBC.ChatBots.Coin.TxBit.Services
         {
             this._log.LogDebug("Requesting coin data from TxBit");
             this._log.LogTrace("Building TxBit request URL");
-            Uri url = new Uri($"{this._txbitOptions.ApiURL}/getcurrencyinformation?currency={this._wsbcOptions.CoinCode}");
+            Uri url = new Uri($"{this._txbitOptions.ApiURL}/getcurrencyinformation?currency={this._wsbcOptions.CoinTicker}");
 
             this._log.LogTrace("Sending request to {URL}", url);
             HttpClient client = this._clientFactory.CreateClient();

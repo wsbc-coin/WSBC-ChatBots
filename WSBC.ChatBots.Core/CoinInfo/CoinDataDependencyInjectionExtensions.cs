@@ -20,7 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
-            services.Configure<CachingOptions>(_ => { });
+            services.Configure<CoinOptions>(_ => { });
 
             services.AddTxBitClient();
             services.AddBlockchainExplorerClient();
@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
                 services.Configure<TxBitOptions>(configuration);
 
-            services.Configure<WsbcOptions>(_ => { });
+            services.Configure<CoinOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ICoinDataClient<TxBitData>, TxBitDataClient>();
 

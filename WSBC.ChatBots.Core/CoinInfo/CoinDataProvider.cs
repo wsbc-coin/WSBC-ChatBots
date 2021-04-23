@@ -16,7 +16,7 @@ namespace WSBC.ChatBots.Coin.Services
         private readonly ICoinDataClient<MiningPoolStatsData> _poolStatsClient;
         private readonly IExplorerDataClient _explorerClient;
         private readonly ILogger _log;
-        private readonly IOptionsMonitor<CachingOptions> _cachingOptions;
+        private readonly IOptionsMonitor<CoinOptions> _coinOptions;
         private readonly SemaphoreSlim _coinLock;
         private readonly SemaphoreSlim _poolsLock;
 
@@ -27,13 +27,13 @@ namespace WSBC.ChatBots.Coin.Services
         private DateTime _poolStatsDataCacheTimeUTC;
 
         public CoinDataProvider(ICoinDataClient<TxBitData> txbitClient, ICoinDataClient<MiningPoolStatsData> poolStatsClient, IExplorerDataClient explorerClient,
-            ILogger<CoinDataProvider> log, IOptionsMonitor<CachingOptions> cachingOptions)
+            ILogger<CoinDataProvider> log, IOptionsMonitor<CoinOptions> coinOptions)
         {
             this._txbitClient = txbitClient;
             this._explorerClient = explorerClient;
             this._poolStatsClient = poolStatsClient;
             this._log = log;
-            this._cachingOptions = cachingOptions;
+            this._coinOptions = coinOptions;
             this._coinLock = new SemaphoreSlim(1, 1);
             this._poolsLock = new SemaphoreSlim(1, 1);
         }
@@ -44,7 +44,7 @@ namespace WSBC.ChatBots.Coin.Services
             try
             {
                 // attempt to get cached first to avoid hammering APIs
-                if (_cachedCoinData != null && DateTime.UtcNow < this._coinDateCacheTimeUTC + this._cachingOptions.CurrentValue.DataCacheLifetime)
+                if (_cachedCoinData != null && DateTime.UtcNow < this._coinDateCacheTimeUTC + this._coinOptions.CurrentValue.DataCacheLifetime)
                 {
                     this._log.LogTrace("Found valid cached coin data, skipping APIs request");
                     return _cachedCoinData;
@@ -94,7 +94,7 @@ namespace WSBC.ChatBots.Coin.Services
             try
             {
                 // attempt to get cached first to avoid hammering APIs
-                if (_cachedPoolStatsData != null && DateTime.UtcNow < this._poolStatsDataCacheTimeUTC + this._cachingOptions.CurrentValue.MiningPoolStatsDataCacheLifetime)
+                if (_cachedPoolStatsData != null && DateTime.UtcNow < this._poolStatsDataCacheTimeUTC + this._coinOptions.CurrentValue.MiningPoolStatsDataCacheLifetime)
                 {
                     this._log.LogTrace("Found valid cached pools data, skipping APIs request");
                     return _cachedPoolStatsData;

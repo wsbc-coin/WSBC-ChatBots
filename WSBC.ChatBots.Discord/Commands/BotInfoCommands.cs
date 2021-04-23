@@ -14,11 +14,11 @@ namespace WSBC.ChatBots.Discord.Commands
     public class BotInfoCommands : ModuleBase<SocketCommandContext>
     {
         private readonly CommandService _commandService;
-        private readonly WsbcOptions _coinOptions;
+        private readonly CoinOptions _coinOptions;
         private readonly DiscordOptions _discordOptions;
 
         public BotInfoCommands(CommandService commandService,
-            IOptionsSnapshot<WsbcOptions> coinOptions, IOptionsSnapshot<DiscordOptions> discordOptions)
+            IOptionsSnapshot<CoinOptions> coinOptions, IOptionsSnapshot<DiscordOptions> discordOptions)
         {
             this._commandService = commandService;
             this._coinOptions = coinOptions.Value;
@@ -36,7 +36,7 @@ namespace WSBC.ChatBots.Discord.Commands
             embed.Url = this._coinOptions.CoinURL;
             embed.Description = $"A bot for checking data about {this._coinOptions.CoinName} and its network!";
             embed.WithAuthor(base.Context.User);
-            embed.WithFooter($"{this._coinOptions.CoinCode} Bot v{GetBotVersion()}", this._coinOptions.CoinIconURL);
+            embed.WithFooter($"{this._coinOptions.CoinTicker} Bot v{GetBotVersion()}", this._coinOptions.CoinIconURL);
 
             // build fields for all commands
             StringBuilder builder = new StringBuilder();
