@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using Discord;
 using Microsoft.Extensions.Options;
-using WSBC.ChatBots.Discord.Explorer;
-using WSBC.ChatBots.Discord.MiningPoolStats;
+using WSBC.ChatBots.Coin;
+using WSBC.ChatBots.Coin.Explorer;
+using WSBC.ChatBots.Coin.MiningPoolStats;
 
-namespace WSBC.ChatBots.Discord.Discord.Services
+namespace WSBC.ChatBots.Discord.Services
 {
     class CoinDataEmbedBuilder : ICoinDataEmbedBuilder
     {

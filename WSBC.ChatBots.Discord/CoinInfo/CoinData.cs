@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSBC.ChatBots.Discord
+namespace WSBC.ChatBots.Coin
 {
     /// <summary>Represents aggregated data for displaying in Discord.</summary>
     public class CoinData

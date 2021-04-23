@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace WSBC.ChatBots.Discord.Explorer
+namespace WSBC.ChatBots.Coin.Explorer
 {
     public interface IExplorerDataClient
     {

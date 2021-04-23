@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -7,17 +6,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using WSBC.ChatBots.Discord.Discord;
-using WSBC.ChatBots.Discord.Discord.Services;
-using WSBC.ChatBots.Discord.Explorer;
-using WSBC.ChatBots.Discord.Explorer.Services;
-using WSBC.ChatBots.Discord.Memes;
-using WSBC.ChatBots.Discord.Memes.Services;
-using WSBC.ChatBots.Discord.MiningPoolStats;
-using WSBC.ChatBots.Discord.MiningPoolStats.Services;
 using WSBC.ChatBots.Discord.Services;
-using WSBC.ChatBots.Discord.TxBit;
-using WSBC.ChatBots.Discord.TxBit.Services;
+using WSBC.ChatBots.Coin.Explorer;
+using WSBC.ChatBots.Coin.Explorer.Services;
+using WSBC.ChatBots.Memes;
+using WSBC.ChatBots.Memes.Services;
+using WSBC.ChatBots.Coin.MiningPoolStats;
+using WSBC.ChatBots.Coin.MiningPoolStats.Services;
+using WSBC.ChatBots.Coin.Services;
+using WSBC.ChatBots.Coin.TxBit;
+using WSBC.ChatBots.Coin.TxBit.Services;
+using WSBC.ChatBots.Coin;
 
 namespace WSBC.ChatBots.Discord
 {

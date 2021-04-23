@@ -1,4 +1,4 @@
-﻿namespace WSBC.ChatBots.Discord
+﻿namespace WSBC.ChatBots.Coin
 {
     public class WsbcOptions
     {

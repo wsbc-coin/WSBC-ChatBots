@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Discord.Commands;
 
-namespace WSBC.ChatBots.Discord.Discord
+namespace WSBC.ChatBots.Discord
 {
     public class DiscordOptions
     {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace WSBC.ChatBots.Discord.Explorer.Services
+namespace WSBC.ChatBots.Coin.Explorer.Services
 {
     class ExplorerDataClient : IExplorerDataClient
     {

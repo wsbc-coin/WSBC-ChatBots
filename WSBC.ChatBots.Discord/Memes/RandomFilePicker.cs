@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace WSBC.ChatBots.Discord.Memes.Services
+namespace WSBC.ChatBots.Memes.Services
 {
     class RandomFilePicker : IRandomFilePicker
     {

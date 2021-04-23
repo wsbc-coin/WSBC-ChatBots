@@ -1,4 +1,4 @@
-﻿namespace WSBC.ChatBots.Discord.MiningPoolStats
+﻿namespace WSBC.ChatBots.Coin.MiningPoolStats
 {
     public class MiningPoolStatsOptions
     {

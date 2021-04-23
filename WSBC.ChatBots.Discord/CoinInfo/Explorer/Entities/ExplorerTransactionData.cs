@@ -1,9 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
-using WSBC.ChatBots.Discord.Serialization;
-using WSBC.ChatBots.Discord.Utilities;
+using WSBC.ChatBots.Coin.Serialization;
+using WSBC.ChatBots.Utilities;
 
-namespace WSBC.ChatBots.Discord.Explorer
+namespace WSBC.ChatBots.Coin.Explorer
 {
     /// <summary>Deserialized response of Explorer's /transaction/ API endpoint.</summary>
     /// <remarks>This class doesn't cointain all info returned by API - for example, inputs and outputs are currently missing.

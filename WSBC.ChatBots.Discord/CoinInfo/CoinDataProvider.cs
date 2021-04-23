@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WSBC.ChatBots.Discord.Explorer;
-using WSBC.ChatBots.Discord.MiningPoolStats;
-using WSBC.ChatBots.Discord.TxBit;
+using WSBC.ChatBots.Coin.Explorer;
+using WSBC.ChatBots.Coin.MiningPoolStats;
+using WSBC.ChatBots.Coin.TxBit;
 
-namespace WSBC.ChatBots.Discord.Services
+namespace WSBC.ChatBots.Coin.Services
 {
     class CoinDataProvider : ICoinDataProvider, IDisposable
     {

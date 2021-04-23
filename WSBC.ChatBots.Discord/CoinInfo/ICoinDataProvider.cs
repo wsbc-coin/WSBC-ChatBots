@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using WSBC.ChatBots.Discord.MiningPoolStats;
+using WSBC.ChatBots.Coin.MiningPoolStats;
 
-namespace WSBC.ChatBots.Discord
+namespace WSBC.ChatBots.Coin
 {
     public interface ICoinDataProvider
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using WSBC.ChatBots.Discord.Utilities;
+using WSBC.ChatBots.Utilities;
 
-namespace WSBC.ChatBots.Discord.Explorer
+namespace WSBC.ChatBots.Coin.Explorer
 {
     /// <summary>Deserialized response of Explorer's /block/ API endpoint.</summary>
     /// <seealso href="https://github.com/arqma/explorer-arqma#apiblockblock_numberblock_hash"/>

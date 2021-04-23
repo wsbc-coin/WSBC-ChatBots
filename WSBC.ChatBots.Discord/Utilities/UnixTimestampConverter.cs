@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace WSBC.ChatBots.Discord.Utilities
+namespace WSBC.ChatBots.Utilities
 {
     public class UnixTimestampConverter : DateTimeConverterBase
     {

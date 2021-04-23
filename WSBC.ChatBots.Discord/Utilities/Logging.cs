@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using WSBC.ChatBots.Discord.Utilities;
+using WSBC.ChatBots.Utilities;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-namespace WSBC.ChatBots.Discord
+namespace WSBC.ChatBots
 {
     static class Logging
     {

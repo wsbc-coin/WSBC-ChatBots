@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using WSBC.ChatBots.Discord.Utilities;
+using WSBC.ChatBots.Utilities;
 
-namespace WSBC.ChatBots.Discord.MiningPoolStats
+namespace WSBC.ChatBots.Coin.MiningPoolStats
 {
     /// <summary>Represents coin data as presented by MiningPoolStats API.</summary>
     public class MiningPoolStatsData

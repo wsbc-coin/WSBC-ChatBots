@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using WSBC.ChatBots.Discord.Serialization;
+using WSBC.ChatBots.Coin.Serialization;
 
-namespace WSBC.ChatBots.Discord.Explorer
+namespace WSBC.ChatBots.Coin.Explorer
 {
     public class ExplorerEmissionData
     {

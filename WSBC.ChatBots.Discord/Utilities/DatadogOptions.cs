@@ -1,7 +1,7 @@
 ﻿using Serilog.Events;
 using Serilog.Sinks.Datadog.Logs;
 
-namespace WSBC.ChatBots.Discord.Utilities
+namespace WSBC.ChatBots.Utilities
 {
     public class DatadogOptions
     {

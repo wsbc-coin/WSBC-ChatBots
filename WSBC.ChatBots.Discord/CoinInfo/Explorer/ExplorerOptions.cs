@@ -1,4 +1,4 @@
-﻿namespace WSBC.ChatBots.Discord.Explorer
+﻿namespace WSBC.ChatBots.Coin.Explorer
 {
     class ExplorerOptions
     {

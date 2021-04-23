@@ -1,4 +1,4 @@
-﻿namespace WSBC.ChatBots.Discord.Memes
+﻿namespace WSBC.ChatBots.Memes
 {
     public class MemesOptions
     {

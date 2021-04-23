@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace WSBC.ChatBots.Discord.TxBit.Services
+namespace WSBC.ChatBots.Coin.TxBit.Services
 {
     class TxBitDataClient : ICoinDataClient<TxBitData>
     {

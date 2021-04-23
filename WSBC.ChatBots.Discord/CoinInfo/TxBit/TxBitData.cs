@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace WSBC.ChatBots.Discord.TxBit
+namespace WSBC.ChatBots.Coin.TxBit
 {
     /// <summary>Represents coin data as presented by TxBit API.</summary>
     /// <seealso href="https://apidocs.txbit.io/#public-getcurrencyinformation"/>

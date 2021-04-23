@@ -1,4 +1,4 @@
-﻿namespace WSBC.ChatBots.Discord.TxBit
+﻿namespace WSBC.ChatBots.Coin.TxBit
 {
     class TxBitOptions
     {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace WSBC.ChatBots.Discord.MiningPoolStats.Services
+namespace WSBC.ChatBots.Coin.MiningPoolStats.Services
 {
     class MiningPoolStatsDataClient : ICoinDataClient<MiningPoolStatsData>
     {

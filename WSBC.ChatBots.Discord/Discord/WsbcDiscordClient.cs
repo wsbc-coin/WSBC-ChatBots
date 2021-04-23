@@ -5,7 +5,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace WSBC.ChatBots.Discord.Discord.Services
+namespace WSBC.ChatBots.Discord.Services
 {
     /// <summary>Wrapper for Discord.NET's client to make it work nicely with DI.</summary>
     class WsbcDiscordClient : IDisposable

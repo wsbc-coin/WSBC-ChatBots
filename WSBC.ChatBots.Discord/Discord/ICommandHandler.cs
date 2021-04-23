@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace WSBC.ChatBots.Discord.Discord
+namespace WSBC.ChatBots.Discord
 {
     interface ICommandHandler
     {

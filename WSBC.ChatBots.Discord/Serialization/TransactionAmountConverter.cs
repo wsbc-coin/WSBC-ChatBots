@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace WSBC.ChatBots.Discord.Serialization
+namespace WSBC.ChatBots.Coin.Serialization
 {
     class TransactionAmountConverter : JsonConverter
     {

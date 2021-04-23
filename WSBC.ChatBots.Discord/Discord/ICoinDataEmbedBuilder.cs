@@ -1,8 +1,9 @@
 ﻿using Discord;
-using WSBC.ChatBots.Discord.Explorer;
-using WSBC.ChatBots.Discord.MiningPoolStats;
+using WSBC.ChatBots.Coin;
+using WSBC.ChatBots.Coin.Explorer;
+using WSBC.ChatBots.Coin.MiningPoolStats;
 
-namespace WSBC.ChatBots.Discord.Discord
+namespace WSBC.ChatBots.Discord
 {
     public interface ICoinDataEmbedBuilder
     {

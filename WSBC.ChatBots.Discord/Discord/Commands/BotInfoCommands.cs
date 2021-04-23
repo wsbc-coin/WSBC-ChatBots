@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Options;
+using WSBC.ChatBots.Coin;
 
-namespace WSBC.ChatBots.Discord.Discord.Commands
+namespace WSBC.ChatBots.Discord.Commands
 {
     [Name("Bot Info")]
     public class BotInfoCommands : ModuleBase<SocketCommandContext>

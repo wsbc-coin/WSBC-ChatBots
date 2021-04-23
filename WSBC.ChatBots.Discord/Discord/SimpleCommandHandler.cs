@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace WSBC.ChatBots.Discord.Discord.Services
+namespace WSBC.ChatBots.Discord.Services
 {
     /// <summary>Handler that allows use of Discord.NET's default commands system.</summary>
     // taken from https://github.com/TehGM/EinherjiBot 

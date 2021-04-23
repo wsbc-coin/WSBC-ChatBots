@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace WSBC.ChatBots.Discord
+namespace WSBC.ChatBots.Coin
 {
     interface ICoinDataClient<T>
     {

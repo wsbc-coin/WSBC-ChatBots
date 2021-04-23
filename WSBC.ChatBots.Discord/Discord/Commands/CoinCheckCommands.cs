@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
-using WSBC.ChatBots.Discord.Explorer;
-using WSBC.ChatBots.Discord.MiningPoolStats;
+using WSBC.ChatBots.Coin;
+using WSBC.ChatBots.Coin.Explorer;
+using WSBC.ChatBots.Coin.MiningPoolStats;
 
-namespace WSBC.ChatBots.Discord.Discord.Commands
+namespace WSBC.ChatBots.Discord.Commands
 {
     [Name("Coin Info")]
     public class CoinCheckCommands : ModuleBase<SocketCommandContext>

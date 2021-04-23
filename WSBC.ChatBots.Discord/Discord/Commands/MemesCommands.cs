@@ -4,9 +4,9 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WSBC.ChatBots.Discord.Memes;
+using WSBC.ChatBots.Memes;
 
-namespace WSBC.ChatBots.Discord.Discord.Commands
+namespace WSBC.ChatBots.Discord.Commands
 {
     [Name("Memes")]
     public class MemesCommands : ModuleBase<SocketCommandContext>
