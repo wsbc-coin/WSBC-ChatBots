@@ -31,7 +31,8 @@ namespace WSBC.ChatBots.Telegram.Services
             Message msg = e.Message;
             if (msg.Type != MessageType.Text || string.IsNullOrWhiteSpace(msg.Text) || msg.Text[0] != '/')
                 return;
-            string cmd = msg.Text.Remove(msg.Text.IndexOf(' '));
+            int spaceIndex = msg.Text.IndexOf(' ');
+            string cmd = spaceIndex != -1 ? msg.Text.Remove(spaceIndex) : msg.Text;
             if (!this._commands.TryGetValue(cmd, out Action<ITelegramBotClient, Message> callback))
                 return;
             callback?.Invoke(this._client.Client, msg);
