@@ -18,6 +18,7 @@ namespace WSBC.ChatBots.Telegram.Services
         private readonly ITelegramClient _client;
         private readonly ILogger _log;
         private readonly IDictionary<string, TelegramCommand> _commands;
+        private User _currentUser;
 
         public CommandsHandler(ITelegramClient client, ILogger<CommandsHandler> log)
         {
@@ -28,13 +29,21 @@ namespace WSBC.ChatBots.Telegram.Services
             this._client.MessageReceived += OnMessageReceived;
         }
 
-        private void OnMessageReceived(object sender, MessageEventArgs e)
+        private async void OnMessageReceived(object sender, MessageEventArgs e)
         {
             Message msg = e.Message;
             if (msg.Type != MessageType.Text || string.IsNullOrWhiteSpace(msg.Text) || msg.Text[0] != '/')
                 return;
             int spaceIndex = msg.Text.IndexOf(' ');
             string cmd = spaceIndex != -1 ? msg.Text.Remove(spaceIndex) : msg.Text;
+            if (cmd.Contains('@'))
+            {
+                if (this._currentUser == null)
+                    this._currentUser = await this._client.Client.GetMeAsync().ConfigureAwait(false);
+                string username = "@" + this._currentUser.Username;
+                if (cmd.EndsWith(username, StringComparison.OrdinalIgnoreCase))
+                    cmd = cmd.Remove(cmd.Length - username.Length, username.Length);
+            }
             if (!this._commands.TryGetValue(cmd, out TelegramCommand command))
                 return;
             command?.Invoke(this._client.Client, msg);
