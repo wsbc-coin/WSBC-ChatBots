@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using WSBC.ChatBots.Telegram.Autopost;
 using WSBC.ChatBots.Telegram.Services;
 using WSBC.ChatBots.Utilities;
 
@@ -33,6 +34,9 @@ namespace WSBC.ChatBots.Telegram
                 ITelegramClient telegramClient = _services.GetRequiredService<ITelegramClient>();
                 telegramClient.Start();
 
+                // init autoposting
+                _services.GetRequiredService<AutopostService>();
+
                 // wait forever to prevent window closing
                 await Task.Delay(-1).ConfigureAwait(false);
             }
@@ -55,6 +59,10 @@ namespace WSBC.ChatBots.Telegram
 
             // Memes feature
             services.AddMemes(configuration: configuration.GetSection("Memes"));
+
+            // Autopost feature
+            services.AddSingleton<AutopostService>()
+                .Configure<AutopostOptions>(configuration.GetSection("Autopost"));
 
             return services;
         }
