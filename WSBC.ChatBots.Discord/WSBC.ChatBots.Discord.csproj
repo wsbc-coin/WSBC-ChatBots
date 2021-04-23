@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>WSBC.ChatBots.Discord</RootNamespace>
-    <AssemblyName>WsbcDiscordBot</AssemblyName>
+    <AssemblyName>WSBC.ChatBots.Discord</AssemblyName>
     <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
     <Company>WallStreetBetsCoin</Company>
     <Version>1.2.0</Version>
