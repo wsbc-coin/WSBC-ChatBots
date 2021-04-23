@@ -9,7 +9,7 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace WSBC.ChatBots
 {
-    static class Logging
+    public static class Logging
     {
         #region INITIALIZATION
         private static bool _initialized = false;

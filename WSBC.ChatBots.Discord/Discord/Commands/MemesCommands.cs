@@ -4,6 +4,7 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WSBC.ChatBots;
 using WSBC.ChatBots.Memes;
 
 namespace WSBC.ChatBots.Discord.Commands

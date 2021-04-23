@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace WSBC.ChatBots.Coin.TxBit.Services
 {
-    class TxBitDataClient : ICoinDataClient<TxBitData>
+    public class TxBitDataClient : ICoinDataClient<TxBitData>
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger _log;

@@ -5,7 +5,7 @@ namespace WSBC.ChatBots.Coin.TxBit
 {
     /// <summary>Represents coin data as presented by TxBit API.</summary>
     /// <seealso href="https://apidocs.txbit.io/#public-getcurrencyinformation"/>
-    class TxBitData
+    public class TxBitData
     {
         /// <summary>Currency full name.</summary>
         [JsonProperty("CurrencyLong")]
@@ -70,7 +70,7 @@ namespace WSBC.ChatBots.Coin.TxBit
         private TxBitData() { }
     }
 
-    enum TxBitAssetType
+    public enum TxBitAssetType
     {
         /// <summary>Currency is a coin with own blockchain.</summary>
         COIN, 
