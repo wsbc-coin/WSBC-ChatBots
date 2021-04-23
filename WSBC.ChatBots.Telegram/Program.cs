@@ -39,6 +39,9 @@ namespace WSBC.ChatBots.Telegram
                 // init autoposting
                 _services.GetRequiredService<AutopostService>();
 
+                // init all commands - until a proper commands system is in place each handler needs to be triggered manually
+                _services.GetRequiredService<Commands.TokenCheckCommands>();
+
                 // wait forever to prevent window closing
                 await Task.Delay(-1).ConfigureAwait(false);
             }
@@ -63,7 +66,10 @@ namespace WSBC.ChatBots.Telegram
 
             // Telegram.Bot
             services.AddSingleton<ITelegramClient, WsbcTelegramClient>()
-                .Configure<TelegramOptions>(configuration.GetSection("Telegram"));
+                .AddSingleton<ICommandsHandler, CommandsHandler>()
+                .Configure<TelegramOptions>(configuration.GetSection("Telegram"))
+                // commands
+                .AddSingleton<Commands.TokenCheckCommands>();
 
             // Token Data
             services
