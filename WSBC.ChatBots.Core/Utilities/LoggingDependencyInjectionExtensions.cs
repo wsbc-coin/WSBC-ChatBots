@@ -12,9 +12,9 @@ namespace Microsoft.Extensions.DependencyInjection
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
-            services.AddLogging(); 
             services.TryAddSingleton<ILoggerFactory>(new LoggerFactory()
                 .AddSerilog(Log.Logger, dispose: true));
+            services.AddLogging(); 
 
             return services;
         }
