@@ -4,19 +4,10 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using WSBC.ChatBots.Discord.Services;
-using WSBC.ChatBots.Coin.Explorer;
-using WSBC.ChatBots.Coin.Explorer.Services;
-using WSBC.ChatBots.Memes;
-using WSBC.ChatBots.Memes.Services;
-using WSBC.ChatBots.Coin.MiningPoolStats;
-using WSBC.ChatBots.Coin.MiningPoolStats.Services;
-using WSBC.ChatBots.Coin.Services;
-using WSBC.ChatBots.Coin.TxBit;
-using WSBC.ChatBots.Coin.TxBit.Services;
 using WSBC.ChatBots.Coin;
+using WSBC.ChatBots.Utilities;
 
 namespace WSBC.ChatBots.Discord
 {
@@ -30,12 +21,7 @@ namespace WSBC.ChatBots.Discord
             AppDomain.CurrentDomain.ProcessExit += (sender, e) => OnExit();
 
             // build configuration
-            IConfiguration config = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json", optional: false)
-                .AddJsonFile("appsecrets.json", optional: true)
-                .AddCommandLine(args)
-                .Build();
+            IConfiguration config = ConfigurationLoader.BuildDefault(args);
 
             // enable logging
             Logging.ConfigureLogging(config);
