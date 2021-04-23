@@ -28,10 +28,11 @@ namespace WSBC.ChatBots.Token.DexGuru.Services
         {
             this._log.LogDebug("Requesting coin data from dex.guru");
             this._log.LogTrace("Building dex.guru request URL");
-            Uri url = new Uri($"{this._dexGuruOptions.ApiURL}/v1/tokens/{this._tokenOptions.ContractAddress}");
+            Uri url = new Uri($"{this._dexGuruOptions.ApiURL}/tokens/{this._tokenOptions.ContractAddress}");
 
             this._log.LogTrace("Sending request to {URL}", url);
             HttpClient client = this._clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("User-Agent", this._dexGuruOptions.UserAgent);
             using HttpResponseMessage response = await client.GetAsync(url, cancellationToken).ConfigureAwait(false);
 
             this._log.LogTrace("Parsing dex.guru response");
