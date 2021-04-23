@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
@@ -48,32 +49,49 @@ namespace WSBC.ChatBots.Telegram.Commands
 
         private async void CmdPrice(ITelegramBotClient client, Message msg)
         {
-            TokenData data = await this._tokenDataProvider.GetDataAsync(this._cts.Token).ConfigureAwait(false);
-            if (data == null || data.PriceETH == 0)
+            try
             {
-                await client.SendTextMessageAsync(msg.Chat.Id, "Failed retrieving token data", cancellationToken: this._cts.Token).ConfigureAwait(false);
-                return;
-            }
+                TokenData data = await this._tokenDataProvider.GetDataAsync(this._cts.Token).ConfigureAwait(false);
+                if (data == null || data.PriceETH == 0)
+                {
+                    await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
+                    return;
+                }
 
-            await client.SendTextMessageAsync(msg.Chat.Id, $"1 WSBT = <b>${data.PriceUSD.ToString(_priceFormatShort, _priceFormatProvider)}</b> ({data.PriceETH.ToString(_priceFormatLong, _priceFormatProvider)} ETH)<pre> </pre>24h change: {data.PriceChange:0.##%}",
-                ParseMode.Html, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                await client.SendTextMessageAsync(msg.Chat.Id, $"1 WSBT = <b>${data.PriceUSD.ToString(_priceFormatShort, _priceFormatProvider)}</b> ({data.PriceETH.ToString(_priceFormatLong, _priceFormatProvider)} ETH)<pre> </pre>24h change: {data.PriceChange:0.##%}",
+                    ParseMode.Html, cancellationToken: this._cts.Token).ConfigureAwait(false);
+            }
+            catch
+            {
+                await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
+            }
         }
 
         private async void CmdVolume(ITelegramBotClient client, Message msg)
         {
-            TokenData data = await this._tokenDataProvider.GetDataAsync(this._cts.Token).ConfigureAwait(false);
-            if (data == null || data.Volume == 0)
+            try
             {
-                await client.SendTextMessageAsync(msg.Chat.Id, "Failed retrieving token data", cancellationToken: this._cts.Token).ConfigureAwait(false);
-                return;
-            }
+                TokenData data = await this._tokenDataProvider.GetDataAsync(this._cts.Token).ConfigureAwait(false);
+                if (data == null || data.Volume == 0)
+                {
+                    await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
+                    return;
+                }
 
-            await client.SendTextMessageAsync(msg.Chat.Id, @$"WSBT traded in last 24 hours: *${data.VolumeUSD.ToString(_priceFormatShort, _priceFormatProvider)}*
+                await client.SendTextMessageAsync(msg.Chat.Id, @$"WSBT traded in last 24 hours: *${data.VolumeUSD.ToString(_priceFormatShort, _priceFormatProvider)}*
 ({data.Volume.ToString(_priceFormatShort, _priceFormatProvider)} WSBT / {data.VolumeETH.ToString(_priceFormatShort, _priceFormatProvider)} ETH)
 
 24h change: {data.VolumeChange:0.##%}",
-                ParseMode.Markdown, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                    ParseMode.Markdown, cancellationToken: this._cts.Token).ConfigureAwait(false);
+            }
+            catch
+            {
+                await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
+            }
         }
+
+        private Task SendFailedRetrievingAsync(ITelegramBotClient client, Message msg)
+            => client.SendTextMessageAsync(msg.Chat.Id, "Failed retrieving token data", cancellationToken: this._cts.Token);
 
         public void Dispose()
         {
