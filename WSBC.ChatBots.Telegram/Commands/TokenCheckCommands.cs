@@ -25,8 +25,7 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._log = log;
             this._cts = new CancellationTokenSource();
 
-            this._handler.Register("/address", CmdAddress);
-            this._handler.Register("/contract", CmdAddress);
+            this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)

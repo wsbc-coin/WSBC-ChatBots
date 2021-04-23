@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -15,13 +17,13 @@ namespace WSBC.ChatBots.Telegram.Services
     {
         private readonly ITelegramClient _client;
         private readonly ILogger _log;
-        private readonly IDictionary<string, Action<ITelegramBotClient, Message>> _commands;
+        private readonly IDictionary<string, TelegramCommand> _commands;
 
         public CommandsHandler(ITelegramClient client, ILogger<CommandsHandler> log)
         {
             this._client = client;
             this._log = log;
-            this._commands = new Dictionary<string, Action<ITelegramBotClient, Message>>();
+            this._commands = new Dictionary<string, TelegramCommand>();
 
             this._client.MessageReceived += OnMessageReceived;
         }
@@ -33,26 +35,19 @@ namespace WSBC.ChatBots.Telegram.Services
                 return;
             int spaceIndex = msg.Text.IndexOf(' ');
             string cmd = spaceIndex != -1 ? msg.Text.Remove(spaceIndex) : msg.Text;
-            if (!this._commands.TryGetValue(cmd, out Action<ITelegramBotClient, Message> callback))
+            if (!this._commands.TryGetValue(cmd, out TelegramCommand command))
                 return;
-            callback?.Invoke(this._client.Client, msg);
+            command?.Invoke(this._client.Client, msg);
         }
 
-        public void Register(string command, Action<ITelegramBotClient, Message> callback)
+        public void Register(TelegramCommand command)
         {
-            if (string.IsNullOrWhiteSpace(command))
-                throw new ArgumentNullException(nameof(command));
-            if (command.Contains(' '))
-                throw new ArgumentException("Commands cannot contain any spaces", nameof(command));
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
-
-            if (command[0] != '/')
-                command = "/" + command;
-
             this._log.LogDebug("Registering command {Command}", command);
-            this._commands[command] = callback;
+            this._commands[command.Command] = command;
         }
+
+        public Task SubmitCommandsAsync(CancellationToken cancellationToken = default)
+            => this._client.Client.SetMyCommandsAsync(this._commands.Values.Where(cmd => cmd.IsListed).Select(cmd => (BotCommand)cmd), cancellationToken);
 
         public void Dispose()
         {
