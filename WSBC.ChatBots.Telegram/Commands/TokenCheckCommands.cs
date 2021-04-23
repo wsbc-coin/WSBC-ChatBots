@@ -37,8 +37,8 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._priceFormatProvider.PercentGroupSeparator = " ";
 
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
-            this._handler.Register("/price", "Gets current WSBT price (according to Dex.Guru)", CmdPrice);
-            this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex.Guru)", CmdVolume);
+            //this._handler.Register("/price", "Gets current WSBT price (according to Dex.Guru)", CmdPrice);
+            //this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex.Guru)", CmdVolume);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
