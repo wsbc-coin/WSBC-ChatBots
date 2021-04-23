@@ -7,7 +7,7 @@
     <AssemblyName>WSBC.ChatBots.Discord</AssemblyName>
     <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
     <Company>WallStreetBetsCoin</Company>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <Product>WSBC.ChatBots.Discord</Product>
     <PackageId>WSBC.ChatBots.Discord</PackageId>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
