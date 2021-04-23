@@ -12,27 +12,27 @@ namespace WSBC.ChatBots.Token.DexGuru.Services
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger _log;
-        private readonly TokenOptions _tokenOptions;
-        private readonly DexGuruOptions _dexGuruOptions;
+        private readonly IOptionsMonitor<TokenOptions> _tokenOptions;
+        private readonly IOptionsMonitor<DexGuruOptions> _dexGuruOptions;
 
         public DexGuruDataClient(IHttpClientFactory clientFactory, ILogger<DexGuruDataClient> log,
-            IOptionsSnapshot<TokenOptions> tokenOptions, IOptionsSnapshot<DexGuruOptions> dexGuruOptions)
+            IOptionsMonitor<TokenOptions> tokenOptions, IOptionsMonitor<DexGuruOptions> dexGuruOptions)
         {
             this._clientFactory = clientFactory;
             this._log = log;
-            this._tokenOptions = tokenOptions.Value;
-            this._dexGuruOptions = dexGuruOptions.Value;
+            this._tokenOptions = tokenOptions;
+            this._dexGuruOptions = dexGuruOptions;
         }
 
         public async Task<DexGuruData> GetDataAsync(CancellationToken cancellationToken = default)
         {
             this._log.LogDebug("Requesting coin data from dex.guru");
             this._log.LogTrace("Building dex.guru request URL");
-            Uri url = new Uri($"{this._dexGuruOptions.ApiURL}/tokens/{this._tokenOptions.ContractAddress}");
+            Uri url = new Uri($"{this._dexGuruOptions.CurrentValue.ApiURL}/tokens/{this._tokenOptions.CurrentValue.ContractAddress}");
 
             this._log.LogTrace("Sending request to {URL}", url);
             HttpClient client = this._clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("User-Agent", this._dexGuruOptions.UserAgent);
+            client.DefaultRequestHeaders.Add("User-Agent", this._dexGuruOptions.CurrentValue.UserAgent);
             using HttpResponseMessage response = await client.GetAsync(url, cancellationToken).ConfigureAwait(false);
 
             this._log.LogTrace("Parsing dex.guru response");

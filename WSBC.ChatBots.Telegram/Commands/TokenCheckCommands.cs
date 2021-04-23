@@ -22,7 +22,7 @@ namespace WSBC.ChatBots.Telegram.Commands
         private const string _priceFormatShort = "#,0.00##";
         private const string _priceFormatLong = "#,0.00####";
 
-        public TokenCheckCommands(ITokenDataProvider tokenDataProvider, ICommandsHandler handler, IOptionsMonitor<TokenOptions> tokenOptions,  ILogger<TokenCheckCommands> log)
+        public TokenCheckCommands(ITokenDataProvider tokenDataProvider, ICommandsHandler handler, IOptionsMonitor<TokenOptions> tokenOptions, ILogger<TokenCheckCommands> log)
         {
             this._tokenDataProvider = tokenDataProvider;
             this._handler = handler;
