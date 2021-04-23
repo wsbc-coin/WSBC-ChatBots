@@ -26,7 +26,7 @@ namespace WSBC.ChatBots.Token.DexGuru.Services
 
         public async Task<DexGuruData> GetDataAsync(CancellationToken cancellationToken = default)
         {
-            this._log.LogDebug("Requesting coin data from dex.guru");
+            this._log.LogDebug("Requesting token data from dex.guru");
             this._log.LogTrace("Building dex.guru request URL");
             Uri url = new Uri($"{this._dexGuruOptions.CurrentValue.ApiURL}/tokens/{this._tokenOptions.CurrentValue.ContractAddress}");
 

@@ -34,11 +34,11 @@ namespace WSBC.ChatBots.Token.Services
                 // attempt to get cached first to avoid hammering APIs
                 if (_cachedTokenData != null && DateTime.UtcNow < this._tokenDateCacheTimeUTC + this._tokenOptions.CurrentValue.DataCacheLifetime)
                 {
-                    this._log.LogTrace("Found valid cached coin data, skipping APIs request");
+                    this._log.LogTrace("Found valid cached token data, skipping APIs request");
                     return _cachedTokenData;
                 }
 
-                this._log.LogInformation("Downloading all coin data");
+                this._log.LogInformation("Downloading all token data");
 
                 // download data
                 DexGuruData dexGuruData = await this._dexGuruClient.GetDataAsync(cancellationToken).ConfigureAwait(false);
