@@ -23,7 +23,7 @@ namespace WSBC.ChatBots.Telegram.Services
         {
             this._client = client;
             this._log = log;
-            this._commands = new Dictionary<string, TelegramCommand>();
+            this._commands = new Dictionary<string, TelegramCommand>(StringComparer.OrdinalIgnoreCase);
 
             this._client.MessageReceived += OnMessageReceived;
         }
