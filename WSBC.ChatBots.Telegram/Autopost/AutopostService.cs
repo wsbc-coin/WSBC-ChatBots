@@ -146,7 +146,6 @@ namespace WSBC.ChatBots.Telegram.Autopost
             while (i < builder.Length)
             {
                 if (ShouldEscape(builder[i]))
-                //if (c <= 96 && !_markdownUnescapedCharacters.Contains(c))
                 {
                     builder.Insert(i, '\\');
                     i++;    // need to do one more skip to not check the same character again (since it has moved)
