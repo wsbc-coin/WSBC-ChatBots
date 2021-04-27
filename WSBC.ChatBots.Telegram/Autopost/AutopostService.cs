@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +9,8 @@ using Microsoft.Extensions.Options;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InputFiles;
+using File = System.IO.File;
 
 namespace WSBC.ChatBots.Telegram.Autopost
 {
@@ -68,9 +72,30 @@ namespace WSBC.ChatBots.Telegram.Autopost
                 // send
                 try
                 {
-                    string text = options.Messages[index];
-                    this._log.LogDebug("Sending message index {Index}: {Text}", index, text);
-                    await this._client.Client.SendTextMessageAsync(chatID, text, ParseMode.Html, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    AutopostMessage message = options.Messages[index];
+                    InputOnlineFile file = GetMessageImage(message);
+                    if (string.IsNullOrWhiteSpace(message.Content) && file == null)
+                    {
+                        this._log.LogError("Cannot send message index {Index} - no content or file", index);
+                        return;
+                    }
+                    ParseMode parseMode = message.ParsingMode ?? options.DefaultParsingMode;
+                    this._log.LogDebug("Sending message index {Index}: {Text}", index, message.Content);
+                    if (file == null)
+                    {
+                        await this._client.Client.SendTextMessageAsync(chatID, message.Content, parseMode,
+                            disableWebPagePreview: message.DisableWebPreview,
+                            disableNotification: true,
+                            replyToMessageId: message.ReplyTo = 0,
+                            cancellationToken: cancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await this._client.Client.SendPhotoAsync(chatID, file, message.Content, parseMode,
+                            disableNotification: true,
+                            replyToMessageId: message.ReplyTo = 0,
+                            cancellationToken: cancellationToken).ConfigureAwait(false);
+                    }
                 }
                 catch (Exception ex) when (ex.LogAsError(this._log, "Exception when sending a message index {Index}", index)) { }
             }
@@ -78,6 +103,26 @@ namespace WSBC.ChatBots.Telegram.Autopost
             {
                 this._lock.Release();
             }
+        }
+
+        private InputOnlineFile GetMessageImage(AutopostMessage message)
+        {
+            if (!string.IsNullOrWhiteSpace(message.ImagePath))
+            {
+                this._log.LogDebug("Attaching local file {File} to autopost message", message.ImagePath);
+                try
+                {
+                    using FileStream stream = File.OpenRead(message.ImagePath);
+                    return new InputOnlineFile(stream);
+                }
+                catch (Exception ex) when (ex.LogAsError(this._log, "Exception when opening file {File}", message.ImagePath))
+                {
+                    return null;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(message.ImageURL))
+                return new InputOnlineFile(message.ImageURL);
+            return null;
         }
 
         private bool CheckCounter(uint rate)

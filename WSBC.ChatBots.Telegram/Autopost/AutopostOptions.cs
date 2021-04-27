@@ -6,8 +6,8 @@ namespace WSBC.ChatBots.Telegram.Autopost
     {
         public uint MessageRate { get; set; } = 35;
         public long ChannelID { get; set; }
-        public ParseMode ParsingMode { get; set; } = ParseMode.Html;
+        public ParseMode DefaultParsingMode { get; set; } = ParseMode.Default;
 
-        public string[] Messages { get; set; }
+        public AutopostMessage[] Messages { get; set; }
     }
 }
