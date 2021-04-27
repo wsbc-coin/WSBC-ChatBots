@@ -37,7 +37,7 @@ namespace WSBC.ChatBots.Telegram
                 telegramClient.Start();
 
                 // init autoposting
-                _services.GetRequiredService<AutopostService>();
+                _services.GetRequiredService<IAutopostService>();
 
                 // init all commands - until a proper commands system is in place each handler needs to be triggered manually
                 _services.GetRequiredService<Commands.TokenCheckCommands>();
@@ -93,7 +93,7 @@ namespace WSBC.ChatBots.Telegram
             services.AddMemes(configuration: configuration.GetSection("Memes"));
 
             // Autopost feature
-            services.AddSingleton<AutopostService>()
+            services.AddSingleton<IAutopostService, AutopostService>()
                 .Configure<AutopostOptions>(configuration.GetSection("Autopost"));
 
             return services;
