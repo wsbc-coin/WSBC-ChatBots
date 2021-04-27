@@ -42,6 +42,7 @@ namespace WSBC.ChatBots.Telegram
                 // init all commands - until a proper commands system is in place each handler needs to be triggered manually
                 _services.GetRequiredService<Commands.TokenCheckCommands>();
                 _services.GetRequiredService<Commands.MemesCommands>();
+                _services.GetRequiredService<Commands.DebugOnlyCommands>();
 
                 // submit commands so they're listed
                 ICommandsHandler commandsHandler = _services.GetRequiredService<ICommandsHandler>();
@@ -75,7 +76,8 @@ namespace WSBC.ChatBots.Telegram
                 .Configure<TelegramOptions>(configuration.GetSection("Telegram"))
                 // commands
                 .AddTransient<Commands.TokenCheckCommands>()
-                .AddTransient<Commands.MemesCommands>();
+                .AddTransient<Commands.MemesCommands>()
+                .AddTransient<Commands.DebugOnlyCommands>();
 
             // Token Data
             services
