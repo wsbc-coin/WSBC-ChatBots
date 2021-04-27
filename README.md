@@ -1,4 +1,6 @@
 # WSBC Discord and Telegram Bots
+[![GitHub top language](https://img.shields.io/github/languages/top/wsbc-coin/WSBC-ChatBots)](https://github.com/wsbc-coin/WSBC-ChatBots) [![GitHub](https://img.shields.io/github/license/wsbc-coin/WSBC-ChatBots)](LICENSE) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/wsbc-coin/WSBC-ChatBots/.NET%20Build)](https://github.com/wsbc-coin/WSBC-ChatBots/actions) [![GitHub issues](https://img.shields.io/github/issues/wsbc-coin/WSBC-ChatBots)](https://github.com/wsbc-coin/WSBC-ChatBots/issues)
+
 Main Discord and Telegram Bots for WallStreetBets Coin and WallStreetBets Token.
 
 ## Usage
