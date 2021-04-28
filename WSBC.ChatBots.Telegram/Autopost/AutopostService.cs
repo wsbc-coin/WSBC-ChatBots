@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -22,10 +20,6 @@ namespace WSBC.ChatBots.Telegram.Autopost
         private readonly IOptionsMonitor<AutopostOptions> _options;
         private readonly SemaphoreSlim _lock;
         private readonly CancellationTokenSource _cts;
-        private static readonly HashSet<char> _markdownUnescapedCharacters = new HashSet<char>()
-        {
-            ' ', '\\', '\n', '*', '_', '~', '[', ']', '(', ')', '`', ','
-        };
 
         private int _messageIndex;
         private int _receivedCounter;
@@ -87,7 +81,7 @@ namespace WSBC.ChatBots.Telegram.Autopost
                     }
                     ParseMode parseMode = message.ParsingMode ?? options.DefaultParsingMode;
                     if (parseMode == ParseMode.MarkdownV2)
-                        content = EscapeContent(content);
+                        content = TelegramMardown.EscapeV2(content);
                     this._log.LogDebug("Sending message index {Index}: {Text}", index, content);
                     if (file == null)
                     {
@@ -131,38 +125,6 @@ namespace WSBC.ChatBots.Telegram.Autopost
             if (!string.IsNullOrWhiteSpace(message.ImageURL))
                 return new InputOnlineFile(message.ImageURL);
             return null;
-        }
-
-        private static string EscapeContent(string content)
-        {
-            if (string.IsNullOrWhiteSpace(content))
-                return content;
-
-            // telegram uses some own, absolutely fucked up "markdown" syntax
-            // so we need to escape any 'normal' special character not on exclusions list
-            StringBuilder builder = new StringBuilder(content);
-            int i = 0;
-            while (i < builder.Length)
-            {
-                if (ShouldEscape(builder[i]))
-                {
-                    builder.Insert(i, '\\');
-                    i++;    // need to do one more skip to not check the same character again (since it has moved)
-                }
-                i++;
-            }
-            return builder.ToString();
-
-            bool ShouldEscape(char c)
-            {
-                // skip all letters and digits
-                if (char.IsDigit(c) || char.IsLetter(c))
-                    return false;
-                // skip elements on exclusion list
-                if (_markdownUnescapedCharacters.Contains(c))
-                    return false;
-                return true;
-            }
         }
 
         private bool CheckCounter(uint rate)
