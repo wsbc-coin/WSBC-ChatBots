@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,13 +39,13 @@ namespace WSBC.ChatBots.Telegram.Commands
 
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
             this._handler.Register("/chart", "Gets links to price charts", CmdChart);
-            //this._handler.Register("/price", "Gets current WSBT price (according to Dex.Guru)", CmdPrice);
-            //this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex.Guru)", CmdVolume);
+            this._handler.Register("/price", "Gets current WSBT price (according to Dex-Trade)", CmdPrice);
+            this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex-Trade)", CmdVolume);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
         {
-            string text = $"*WSBT Contract Address*: `{this._tokenOptions.CurrentValue.ContractAddress}`";
+            string text = TelegramMardown.EscapeV2($"*WSBT Contract Address*: `{this._tokenOptions.CurrentValue.ContractAddress}`");
             await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                 cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
@@ -54,14 +55,17 @@ namespace WSBC.ChatBots.Telegram.Commands
             try
             {
                 TokenData data = await this._tokenDataProvider.GetDataAsync(this._cts.Token).ConfigureAwait(false);
-                if (data == null || data.PriceETH == 0)
+                if (data == null || data.Price == 0)
                 {
                     await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
                     return;
                 }
 
-                await client.SendTextMessageAsync(msg.Chat.Id, $"1 WSBT = <b>${data.PriceUSD.ToString(_priceFormatShort, _priceFormatProvider)}</b> ({data.PriceETH.ToString(_priceFormatLong, _priceFormatProvider)} ETH)<pre> </pre>24h change: {data.PriceChange:0.##%}",
-                    ParseMode.Html, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
+                string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}*\n" +
+                    "_Data provided by [Dex-Trade](https://dex-trade.com/spot/trading/WSBTUSDT). For exchange-independent price, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
+                await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
+                    disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex.LogAsError(this._log, "Exception occured when retrieving token data"))
             {
@@ -80,11 +84,12 @@ namespace WSBC.ChatBots.Telegram.Commands
                     return;
                 }
 
-                await client.SendTextMessageAsync(msg.Chat.Id, @$"WSBT traded in last 24 hours: *${data.VolumeUSD.ToString(_priceFormatShort, _priceFormatProvider)}*
-({data.Volume.ToString(_priceFormatShort, _priceFormatProvider)} WSBT / {data.VolumeETH.ToString(_priceFormatShort, _priceFormatProvider)} ETH)
-
-24h change: {data.VolumeChange:0.##%}",
-                    ParseMode.Markdown, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                string volumeWSBT = data.Volume.ToString(_priceFormatShort, _priceFormatProvider);
+                string volumeUSD = ((decimal)data.Volume * data.Price).ToString(_priceFormatShort, _priceFormatProvider);
+                string text = TelegramMardown.EscapeV2($"WSBT traded on Dex-Trade in last 24 hours:\n*{volumeWSBT} \\(${volumeUSD}\\)*\n" +
+                    "_Data provided by [Dex-Trade](https://dex-trade.com/spot/trading/WSBTUSDT). For exchange-independent volume, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
+                await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
+                    disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex.LogAsError(this._log, "Exception occured when retrieving token data"))
             {

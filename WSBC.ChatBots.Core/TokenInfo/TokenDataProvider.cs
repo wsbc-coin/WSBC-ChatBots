@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WSBC.ChatBots.Token.DexGuru;
+using WSBC.ChatBots.Token.DexTrade;
 
 namespace WSBC.ChatBots.Token.Services
 {
     internal class TokenDataProvider : ITokenDataProvider
     {
-        private readonly ITokenDataClient<DexGuruData> _dexGuruClient;
+        private readonly ITokenDataClient<DexTradeData> _dexTradeClient;
         private readonly ILogger _log;
         private readonly IOptionsMonitor<TokenOptions> _tokenOptions;
         private readonly SemaphoreSlim _lock;
@@ -18,9 +18,9 @@ namespace WSBC.ChatBots.Token.Services
         private TokenData _cachedTokenData;
         private DateTime _tokenDateCacheTimeUTC;
 
-        public TokenDataProvider(ITokenDataClient<DexGuruData> dexGuruClient, ILogger<TokenDataProvider> log, IOptionsMonitor<TokenOptions> tokenOptions)
+        public TokenDataProvider(ITokenDataClient<DexTradeData> dexTradeClient, ILogger<TokenDataProvider> log, IOptionsMonitor<TokenOptions> tokenOptions)
         {
-            this._dexGuruClient = dexGuruClient;
+            this._dexTradeClient = dexTradeClient;
             this._log = log;
             this._tokenOptions = tokenOptions;
             this._lock = new SemaphoreSlim(1, 1);
@@ -41,24 +41,15 @@ namespace WSBC.ChatBots.Token.Services
                 this._log.LogInformation("Downloading all token data");
 
                 // download data
-                DexGuruData dexGuruData = await this._dexGuruClient.GetDataAsync(cancellationToken).ConfigureAwait(false);
+                DexTradeData dexTradeData = await this._dexTradeClient.GetDataAsync(cancellationToken).ConfigureAwait(false);
 
                 // aggregate all data and return
                 this._cachedTokenData = new TokenData()
                 {
-                    LiquidityChange = dexGuruData.LiquidityChange,
-                    LiquidityETH = dexGuruData.LiquidityETH,
-                    LiquidityUSD = dexGuruData.LiquidityUSD,
-                    PriceChange = dexGuruData.PriceChange,
-                    PriceETH = dexGuruData.PriceETH,
-                    PriceUSD = dexGuruData.PriceUSD,
-                    Transactions = dexGuruData.Transactions,
-                    TransactionsChange = dexGuruData.TransactionsChange,
-                    Volume = dexGuruData.Volume,
-                    VolumeChange = dexGuruData.VolumeChange,
-                    VolumeETH = dexGuruData.VolumeETH,
-                    VolumeUSD = dexGuruData.VolumeUSD
+                    Price = dexTradeData?.LastPrice ?? default,
+                    Volume = dexTradeData?.Volume ?? default
                 };
+                this._log.LogDebug("Token data retrieved. Price is {Price}", this._cachedTokenData.Price);
                 this._tokenDateCacheTimeUTC = DateTime.UtcNow;
                 return this._cachedTokenData;
             }
