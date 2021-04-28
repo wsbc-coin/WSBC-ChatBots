@@ -82,6 +82,7 @@ namespace WSBC.ChatBots.Telegram
             // Token Data
             services
                 .AddDexGuruClient(configuration: tokenSection.GetSection("DexGuru"))
+                .AddDexTradeClient(configuration: tokenSection.GetSection("DexTrade"))
                 .AddTokenData();
 
             // Coin Data
