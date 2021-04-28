@@ -37,13 +37,15 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._priceFormatProvider.PercentGroupSeparator = " ";
 
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
+            this._handler.Register("/chart", "Gets links to price charts", CmdChart);
             //this._handler.Register("/price", "Gets current WSBT price (according to Dex.Guru)", CmdPrice);
             //this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex.Guru)", CmdVolume);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
         {
-            await client.SendTextMessageAsync(msg.Chat.Id, $"<b>WSBT Contract Address</b>: <i>{this._tokenOptions.CurrentValue.ContractAddress}</i>", ParseMode.Html, 
+            string text = $"*WSBT Contract Address*: `{this._tokenOptions.CurrentValue.ContractAddress}`";
+            await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                 cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
 
@@ -88,6 +90,13 @@ namespace WSBC.ChatBots.Telegram.Commands
             {
                 await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
             }
+        }
+
+        private async void CmdChart(ITelegramBotClient client, Message msg)
+        {
+            string text = TelegramMardown.EscapeV2("You can view live price chart on [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) and [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)!");
+            await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
+                disableWebPagePreview: true, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
 
         private Task SendFailedRetrievingAsync(ITelegramBotClient client, Message msg)
