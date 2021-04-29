@@ -40,9 +40,9 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
             this._handler.Register("/chart", "Gets links to price charts", CmdChart);
             //this._handler.Register("/price", "Gets current WSBT price (according to Dex-Trade)", CmdPrice);
-            this._handler.Register("/price", CmdPrice);
+            this._handler.Register("/price", CmdPriceTemp);
             //this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex-Trade)", CmdVolume);
-            this._handler.Register("/volume", CmdVolume);
+            this._handler.Register("/volume", CmdVolumeTemp);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
