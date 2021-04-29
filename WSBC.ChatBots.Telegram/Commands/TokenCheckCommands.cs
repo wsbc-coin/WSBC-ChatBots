@@ -39,8 +39,10 @@ namespace WSBC.ChatBots.Telegram.Commands
 
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
             this._handler.Register("/chart", "Gets links to price charts", CmdChart);
-            this._handler.Register("/price", "Gets current WSBT price (according to Dex-Trade)", CmdPrice);
-            this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex-Trade)", CmdVolume);
+            //this._handler.Register("/price", "Gets current WSBT price (according to Dex-Trade)", CmdPrice);
+            this._handler.Register("/price", CmdPrice);
+            //this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex-Trade)", CmdVolume);
+            this._handler.Register("/volume", CmdVolume);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
@@ -73,6 +75,13 @@ namespace WSBC.ChatBots.Telegram.Commands
             }
         }
 
+        private async void CmdPriceTemp(ITelegramBotClient client, Message msg)
+        {
+            string text = TelegramMardown.EscapeV2($"For exchange-independent price data, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc).");
+            await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2,
+                disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
+        }
+
         private async void CmdVolume(ITelegramBotClient client, Message msg)
         {
             try
@@ -95,6 +104,13 @@ namespace WSBC.ChatBots.Telegram.Commands
             {
                 await SendFailedRetrievingAsync(client, msg).ConfigureAwait(false);
             }
+        }
+
+        private async void CmdVolumeTemp(ITelegramBotClient client, Message msg)
+        {
+            string text = TelegramMardown.EscapeV2($"For exchange-independent volume data, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc).");
+            await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2,
+                disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
 
         private async void CmdChart(ITelegramBotClient client, Message msg)
