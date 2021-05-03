@@ -7,6 +7,8 @@ using WSBC.ChatBots.Token.DexGuru.Services;
 using WSBC.ChatBots.Token.DexTrade;
 using WSBC.ChatBots.Token.DexTrade.Services;
 using WSBC.ChatBots.Token.Services;
+using WSBC.ChatBots.Token.Stex;
+using WSBC.ChatBots.Token.Stex.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -21,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddDexGuruClient();
             services.AddDexTradeClient();
+            services.AddStexClient();
             services.TryAddSingleton<ITokenDataProvider, TokenDataProvider>();
 
             return services;
@@ -58,6 +61,24 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<TokenOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ITokenDataClient<DexTradeData>, DexTradeDataClient>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddStexClient(this IServiceCollection services,
+            Action<StexOptions> configureOptions = null, IConfigurationSection configuration = null)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            if (configureOptions != null)
+                services.Configure(configureOptions);
+            if (configuration != null)
+                services.Configure<StexOptions>(configuration);
+
+            services.Configure<TokenOptions>(_ => { });
+            services.AddHttpClient();
+            services.TryAddTransient<ITokenDataClient<StexData>, StexDataClient>();
 
             return services;
         }

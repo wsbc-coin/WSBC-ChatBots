@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WSBC.ChatBots.Token.DexTrade;
+using WSBC.ChatBots.Token.Stex;
 
 namespace WSBC.ChatBots.Token.Services
 {
     internal class TokenDataProvider : ITokenDataProvider
     {
-        private readonly ITokenDataClient<DexTradeData> _dexTradeClient;
+        private readonly ITokenDataClient<StexData> _dataClient;
         private readonly ILogger _log;
         private readonly IOptionsMonitor<TokenOptions> _tokenOptions;
         private readonly SemaphoreSlim _lock;
@@ -18,9 +18,9 @@ namespace WSBC.ChatBots.Token.Services
         private TokenData _cachedTokenData;
         private DateTime _tokenDateCacheTimeUTC;
 
-        public TokenDataProvider(ITokenDataClient<DexTradeData> dexTradeClient, ILogger<TokenDataProvider> log, IOptionsMonitor<TokenOptions> tokenOptions)
+        public TokenDataProvider(ITokenDataClient<StexData> dataClient, ILogger<TokenDataProvider> log, IOptionsMonitor<TokenOptions> tokenOptions)
         {
-            this._dexTradeClient = dexTradeClient;
+            this._dataClient = dataClient;
             this._log = log;
             this._tokenOptions = tokenOptions;
             this._lock = new SemaphoreSlim(1, 1);
@@ -41,13 +41,14 @@ namespace WSBC.ChatBots.Token.Services
                 this._log.LogInformation("Downloading all token data");
 
                 // download data
-                DexTradeData dexTradeData = await this._dexTradeClient.GetDataAsync(cancellationToken).ConfigureAwait(false);
+                StexData data = await this._dataClient.GetDataAsync(cancellationToken).ConfigureAwait(false);
 
                 // aggregate all data and return
                 this._cachedTokenData = new TokenData()
                 {
-                    Price = dexTradeData?.LastPrice ?? default,
-                    Volume = dexTradeData?.Volume ?? default
+                    Price = data?.LastPrice ?? default,
+                    Volume = data?.Volume ?? default,
+                    Change = data?.Change ?? default
                 };
                 this._log.LogDebug("Token data retrieved. Price is {Price}", this._cachedTokenData.Price);
                 this._tokenDateCacheTimeUTC = DateTime.UtcNow;

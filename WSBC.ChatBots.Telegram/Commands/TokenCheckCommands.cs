@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,10 +38,10 @@ namespace WSBC.ChatBots.Telegram.Commands
 
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
             this._handler.Register("/chart", "Gets links to price charts", CmdChart);
-            //this._handler.Register("/price", "Gets current WSBT price (according to Dex-Trade)", CmdPrice);
-            this._handler.Register("/price", CmdPriceTemp);
-            //this._handler.Register("/volume", "Gets WSBT trading volume (according to Dex-Trade)", CmdVolume);
-            this._handler.Register("/volume", CmdVolumeTemp);
+            this._handler.Register("/price", "Gets current WSBT price (according to STEX.com)", CmdPrice);
+            //this._handler.Register("/price", CmdPriceTemp);
+            this._handler.Register("/volume", "Gets WSBT trading volume (according to STEX.com)", CmdVolume);
+            //this._handler.Register("/volume", CmdVolumeTemp);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
@@ -64,8 +63,8 @@ namespace WSBC.ChatBots.Telegram.Commands
                 }
 
                 string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
-                string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}*\n" +
-                    "_Data provided by [Dex-Trade](https://dex-trade.com/spot/trading/WSBTUSDT). For exchange-independent price, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
+                string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\({data.Change:0.##%}\\)\n" +
+                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
                 await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                     disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
@@ -95,8 +94,8 @@ namespace WSBC.ChatBots.Telegram.Commands
 
                 string volumeWSBT = data.Volume.ToString(_priceFormatShort, _priceFormatProvider);
                 string volumeUSD = ((decimal)data.Volume * data.Price).ToString(_priceFormatShort, _priceFormatProvider);
-                string text = TelegramMardown.EscapeV2($"WSBT traded on Dex-Trade in last 24 hours:\n*{volumeWSBT} \\(${volumeUSD}\\)*\n" +
-                    "_Data provided by [Dex-Trade](https://dex-trade.com/spot/trading/WSBTUSDT). For exchange-independent volume, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
+                string text = TelegramMardown.EscapeV2($"WSBT traded on STEX in last 24 hours:\n*{volumeWSBT} \\(${volumeUSD}\\)*\n" +
+                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent volume, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
                 await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                     disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }

@@ -33,7 +33,7 @@ namespace WSBC.ChatBots.Token.DexTrade.Services
 
             using HttpResponseMessage response = await client.GetAsync(url, cancellationToken).ConfigureAwait(false);
 
-            this._log.LogTrace("Parsing dex.guru response");
+            this._log.LogTrace("Parsing Dex-Trade response");
             JObject data = JObject.Parse(await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
             if (!response.IsSuccessStatusCode)
             {
