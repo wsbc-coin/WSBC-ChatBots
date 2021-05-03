@@ -63,7 +63,8 @@ namespace WSBC.ChatBots.Telegram.Commands
                 }
 
                 string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
-                string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\({data.Change:0.##}%\\)\n" +
+                string change = $"{(data.Change >= 0 ? "+" : string.Empty)}{data.Change:0.##}";
+                string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\(*{change}%*\\)\n" +
                     "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
                 await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                     disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
