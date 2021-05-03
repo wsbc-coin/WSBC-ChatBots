@@ -77,7 +77,7 @@ namespace WSBC.ChatBots.Token.Stex
 
         /// <summary>Time when the data was snapshotted.</summary>
         [JsonProperty("timestamp")]
-        [JsonConverter(typeof(UnixTimestampConverter))]
+        [JsonConverter(typeof(MillisecondsUnixTimestampConverter))]
         public DateTimeOffset Timestamp { get; init; }
     }
 }
