@@ -63,7 +63,7 @@ namespace WSBC.ChatBots.Telegram.Commands
                 string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
                 string change = $"{(data.Change >= 0 ? "+" : string.Empty)}{data.Change:0.##}";
                 string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\(*{change}%*\\)\n" +
-                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
+                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)_.");
                 await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                     disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
@@ -87,7 +87,7 @@ namespace WSBC.ChatBots.Telegram.Commands
                 string volumeWSBT = data.Volume.ToString(_priceFormatShort, _priceFormatProvider);
                 string volumeUSD = ((decimal)data.Volume * data.Price).ToString(_priceFormatShort, _priceFormatProvider);
                 string text = TelegramMardown.EscapeV2($"WSBT traded on STEX in last 24 hours:\n*{volumeWSBT} \\(${volumeUSD}\\)*\n" +
-                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent volume, visit [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) or [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)_.");
+                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)_.");
                 await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                     disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
@@ -99,7 +99,7 @@ namespace WSBC.ChatBots.Telegram.Commands
 
         private async void CmdChart(ITelegramBotClient client, Message msg)
         {
-            string text = TelegramMardown.EscapeV2("You can view live price chart on [poocoin](https://poocoin.app/tokens/0x8244609023097AeF71C702cCbaEFC0bde5b48694) and [dex.guru](https://dex.guru/token/0x8244609023097aef71c702ccbaefc0bde5b48694-bsc)!");
+            string text = TelegramMardown.EscapeV2("You can view live price chart on [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)!");
             await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                 disableWebPagePreview: true, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
