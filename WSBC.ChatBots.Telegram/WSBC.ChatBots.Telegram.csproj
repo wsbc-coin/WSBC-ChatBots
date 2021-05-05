@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>WSBC.ChatBots.Telegram</AssemblyName>
-    <Version>1.3.5</Version>
+    <Version>1.3.6</Version>
     <Authors>TehGM and WallStreetBetsCoin Developers</Authors>
     <Company>WallStreetBetsCoin</Company>
     <Description>Main Telegram Bot for WallStreetBets Coin and Token.</Description>
