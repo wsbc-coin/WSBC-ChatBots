@@ -101,7 +101,7 @@ namespace WSBC.ChatBots.Telegram.Commands
         {
             string text = TelegramMardown.EscapeV2("You can view live price chart on [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)!");
             await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
-                disableWebPagePreview: true, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                disableWebPagePreview: false, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
 
         private Task SendFailedRetrievingAsync(ITelegramBotClient client, Message msg)
