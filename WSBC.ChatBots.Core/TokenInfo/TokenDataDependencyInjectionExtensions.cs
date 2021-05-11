@@ -6,6 +6,7 @@ using WSBC.ChatBots.Token.DexGuru;
 using WSBC.ChatBots.Token.DexGuru.Services;
 using WSBC.ChatBots.Token.DexTrade;
 using WSBC.ChatBots.Token.DexTrade.Services;
+using WSBC.ChatBots.Token.PancakeSwap;
 using WSBC.ChatBots.Token.Services;
 using WSBC.ChatBots.Token.Stex;
 using WSBC.ChatBots.Token.Stex.Services;
@@ -79,6 +80,24 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<TokenOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ITokenDataClient<StexData>, StexDataClient>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddPancakeSwapClient(this IServiceCollection services,
+            Action<PancakeSwapOptions> configureOptions = null, IConfigurationSection configuration = null)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            if (configureOptions != null)
+                services.Configure(configureOptions);
+            if (configuration != null)
+                services.Configure<PancakeSwapOptions>(configuration);
+
+            services.Configure<TokenOptions>(_ => { });
+            services.AddHttpClient();
+            services.TryAddTransient<ITokenDataClient<PancakeSwapData>, PancakeSwapDataClient>();
 
             return services;
         }

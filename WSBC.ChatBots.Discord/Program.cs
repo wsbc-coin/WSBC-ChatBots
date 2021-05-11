@@ -79,6 +79,7 @@ namespace WSBC.ChatBots.Discord
                 .AddDexGuruClient(configuration: tokenSection.GetSection("DexGuru"))
                 .AddDexTradeClient(configuration: tokenSection.GetSection("DexTrade"))
                 .AddStexClient(configuration: tokenSection.GetSection("Stex"))
+                .AddPancakeSwapClient(configuration: tokenSection.GetSection("PancakeSwap"))
                 .AddTokenData();
 
             // Coin Data
