@@ -46,7 +46,10 @@ namespace WSBC.ChatBots.Telegram.Services
             }
             if (!this._commands.TryGetValue(cmd, out TelegramCommand command))
                 return;
-            command?.Invoke(this._client.Client, msg);
+
+            string args = cmd.Length == msg.Text.Length ? null : msg.Text.Remove(0, spaceIndex + 1).Trim();
+            CommandContext context = new CommandContext(this._client.Client, e.Message, args);
+            command?.Invoke(context);
         }
 
         public void Register(TelegramCommand command)

@@ -69,8 +69,9 @@ namespace WSBC.ChatBots.Discord
                 .AddSingleton<IDiscordClient>(s => s.GetRequiredService<DiscordSocketClient>())
                 // - Command service
                 .AddSingleton<ICommandHandler, SimpleCommandHandler>()
-                // - Embed builder
+                // - Embed builders
                 .AddTransient<ICoinDataEmbedBuilder, CoinDataEmbedBuilder>()
+                .AddTransient<ITokenDataEmbedBuilder, TokenDataEmbedBuilder>()
                 // - Config
                 .Configure<DiscordOptions>(configuration.GetSection("Discord"));
 
@@ -79,6 +80,7 @@ namespace WSBC.ChatBots.Discord
                 .AddDexGuruClient(configuration: tokenSection.GetSection("DexGuru"))
                 .AddDexTradeClient(configuration: tokenSection.GetSection("DexTrade"))
                 .AddStexClient(configuration: tokenSection.GetSection("Stex"))
+                .AddPancakeSwapClient(configuration: tokenSection.GetSection("PancakeSwap"))
                 .AddTokenData();
 
             // Coin Data
@@ -90,6 +92,9 @@ namespace WSBC.ChatBots.Discord
 
             // Memes feature
             services.AddMemes(configuration: configuration.GetSection("Memes"));
+
+            // Price formatting
+            services.AddTransient<PriceFormatProvider>();
 
             return services;
         }

@@ -84,6 +84,7 @@ namespace WSBC.ChatBots.Telegram
                 .AddDexGuruClient(configuration: tokenSection.GetSection("DexGuru"))
                 .AddDexTradeClient(configuration: tokenSection.GetSection("DexTrade"))
                 .AddStexClient(configuration: tokenSection.GetSection("Stex"))
+                .AddPancakeSwapClient(configuration: tokenSection.GetSection("PancakeSwap"))
                 .AddTokenData();
 
             // Coin Data
@@ -99,6 +100,9 @@ namespace WSBC.ChatBots.Telegram
             // Autopost feature
             services.AddSingleton<IAutopostService, AutopostService>()
                 .Configure<AutopostOptions>(configuration.GetSection("Autopost"));
+
+            // Price formatting
+            services.AddTransient<PriceFormatProvider>();
 
             return services;
         }

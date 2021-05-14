@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using WSBC.ChatBots;
+using Microsoft.Extensions.Options;
 using WSBC.ChatBots.Coin;
 using WSBC.ChatBots.Coin.Explorer;
 using WSBC.ChatBots.Coin.Explorer.Services;
@@ -21,6 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services));
 
             services.Configure<CoinOptions>(_ => { });
+            services.AddSingleton<IPostConfigureOptions<CoinOptions>, ConfigureCoinOptions>();
 
             services.AddTxBitClient();
             services.AddBlockchainExplorerClient();
@@ -41,7 +42,6 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
                 services.Configure<TxBitOptions>(configuration);
 
-            services.Configure<CoinOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ICoinDataClient<TxBitData>, TxBitDataClient>();
 
