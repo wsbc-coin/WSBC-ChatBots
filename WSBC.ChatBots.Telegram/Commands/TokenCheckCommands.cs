@@ -62,10 +62,30 @@ namespace WSBC.ChatBots.Telegram.Commands
                     return;
                 }
 
-                string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
+                string disclaimer = "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)_.";
+
                 string change = $"{(data.Change >= 0 ? "+" : string.Empty)}{data.Change:0.##}";
-                string text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\(*{change}%*\\)\n" +
-                    "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)_.");
+                string text = null;
+
+                if (context.Arguments != null)
+                {
+                    string amountArg = context.Arguments.Split(' ').First();
+                    if (!decimal.TryParse(amountArg, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal amount))
+                    {
+                        await context.Client.SendTextMessageAsync(context.ChatID, "\u274C Invalid amount value provided.", ParseMode.Default,
+                            disableWebPagePreview: true, replyToMessageId: context.MessageID, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                        return;
+                    }
+
+                    string priceUSD = (data.Price * amount).ToString(_priceFormatShort, _priceFormatProvider);
+                    text = TelegramMardown.EscapeV2($"In last trade, {amount.ToString("#,0.####", _priceFormatProvider)} WSBT = *${priceUSD}* \\(*{change}%*\\)\n{disclaimer}");
+                }
+                else
+                {
+                    string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
+                    text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\(*{change}%*\\)\n{disclaimer}");
+                }
+
                 await context.Client.SendTextMessageAsync(context.ChatID, text, ParseMode.MarkdownV2, 
                     disableWebPagePreview: true, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
