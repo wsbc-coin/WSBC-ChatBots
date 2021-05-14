@@ -8,7 +8,7 @@ namespace WSBC.ChatBots.Coin
     {
         public string CoinName { get; set; } = "WallStreetBets Coin";
         public string CoinTicker { get; set; } = "WSBC";
-        public string IconURL { get; set; } = "https://avatars.githubusercontent.com/u/79186640";
+        public string IconURL { get; set; } = "https://raw.githubusercontent.com/wiki/wsbc-coin/wallstreetbets/img/coin-logo-1.png";
         public string CoinURL { get; set; } = "https://wallstreetbetsbros.com/";
         public IEnumerable<ExchangeInfo> Exchanges { get; set; }
 
