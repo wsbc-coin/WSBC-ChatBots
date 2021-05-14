@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WSBC.ChatBots.Coin
 {
@@ -8,6 +9,7 @@ namespace WSBC.ChatBots.Coin
         public string CoinTicker { get; set; } = "WSBC";
         public string CoinIconURL { get; set; } = "https://avatars.githubusercontent.com/u/79186640";
         public string CoinURL { get; set; } = "https://wallstreetbetsbros.com/";
+        public IEnumerable<ExchangeInfo> Exchanges { get; set; }
 
         public TimeSpan DataCacheLifetime { get; set; } = TimeSpan.FromSeconds(10);
         public TimeSpan MiningPoolStatsDataCacheLifetime { get; set; } = TimeSpan.FromMinutes(3);

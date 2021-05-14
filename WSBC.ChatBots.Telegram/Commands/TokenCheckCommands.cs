@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -40,6 +42,7 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._handler.Register("/chart", "Gets links to price charts", CmdChart);
             this._handler.Register("/price", "Gets current WSBT price (according to STEX.com)", CmdPrice);
             this._handler.Register("/volume", "Gets WSBT trading volume (according to STEX.com)", CmdVolume);
+            this._handler.Register("/exchanges", "Gets list of WSBT exchanges", CmdExchanges);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
@@ -102,6 +105,29 @@ namespace WSBC.ChatBots.Telegram.Commands
             string text = TelegramMardown.EscapeV2("You can view live price chart on [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)!");
             await client.SendTextMessageAsync(msg.Chat.Id, text, ParseMode.MarkdownV2, 
                 disableWebPagePreview: false, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
+        }
+
+        private async void CmdExchanges(ITelegramBotClient client, Message msg)
+        {
+            TokenOptions options = this._tokenOptions.CurrentValue;
+            if (options?.Exchanges?.Any() != true)
+            {
+                await client.SendTextMessageAsync(msg.Chat.Id, TelegramMardown.EscapeV2("No exchanges configured, please contact admin"), ParseMode.MarkdownV2,
+                    disableWebPagePreview: true, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                return;
+            }
+
+            StringBuilder builder = new StringBuilder("WSBT exchanges:\n");
+            foreach (ExchangeInfo exchange in options.Exchanges)
+            {
+                builder.Append($"[{exchange.DisplayName}]({exchange.URL})");
+                string pairs = string.Join(", ", exchange.Pairs.Select(p => $"WSBT/{p}"));
+                if (!string.IsNullOrWhiteSpace(pairs))
+                    builder.Append($" - {pairs}");
+                builder.Append('\n');
+            }
+            await client.SendTextMessageAsync(msg.Chat.Id, TelegramMardown.EscapeV2(builder.ToString()), ParseMode.MarkdownV2,
+                disableWebPagePreview: true, disableNotification: true, replyToMessageId: msg.MessageId, cancellationToken: this._cts.Token).ConfigureAwait(false);
         }
 
         private Task SendFailedRetrievingAsync(ITelegramBotClient client, Message msg)
