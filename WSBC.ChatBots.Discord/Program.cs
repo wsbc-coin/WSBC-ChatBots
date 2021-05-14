@@ -93,6 +93,9 @@ namespace WSBC.ChatBots.Discord
             // Memes feature
             services.AddMemes(configuration: configuration.GetSection("Memes"));
 
+            // Price formatting
+            services.AddTransient<PriceFormatProvider>();
+
             return services;
         }
 

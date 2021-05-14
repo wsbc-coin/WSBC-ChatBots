@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot.Types.Enums;
 using WSBC.ChatBots.Token;
+using WSBC.ChatBots.Utilities;
 
 namespace WSBC.ChatBots.Telegram.Commands
 {
@@ -18,23 +19,16 @@ namespace WSBC.ChatBots.Telegram.Commands
         private readonly IOptionsMonitor<TokenOptions> _tokenOptions;
         private readonly ILogger _log;
         private readonly CancellationTokenSource _cts;
+        private readonly PriceFormatProvider _priceFormat;
 
-        private readonly NumberFormatInfo _priceFormatProvider;
-        private const string _priceFormatShort = "#,0.00##";
-        private const string _priceFormatLong = "#,0.00####";
-
-        public TokenCheckCommands(ITokenDataProvider tokenDataProvider, ICommandsHandler handler, IOptionsMonitor<TokenOptions> tokenOptions, ILogger<TokenCheckCommands> log)
+        public TokenCheckCommands(ITokenDataProvider tokenDataProvider, ICommandsHandler handler, IOptionsMonitor<TokenOptions> tokenOptions, ILogger<TokenCheckCommands> log, PriceFormatProvider priceFormatProvider)
         {
             this._tokenDataProvider = tokenDataProvider;
+            this._priceFormat = priceFormatProvider;
             this._handler = handler;
             this._tokenOptions = tokenOptions;
             this._log = log;
             this._cts = new CancellationTokenSource();
-
-            this._priceFormatProvider = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
-            this._priceFormatProvider.NumberGroupSeparator = " ";
-            this._priceFormatProvider.CurrencyGroupSeparator = " ";
-            this._priceFormatProvider.PercentGroupSeparator = " ";
 
             this._handler.Register("/contract", "Gets WSBT token address", CmdAddress);
             this._handler.Register("/chart", "Gets links to price charts", CmdChart);
@@ -77,12 +71,12 @@ namespace WSBC.ChatBots.Telegram.Commands
                         return;
                     }
 
-                    string priceUSD = (data.Price * amount).ToString(_priceFormatShort, _priceFormatProvider);
-                    text = TelegramMardown.EscapeV2($"In last trade, {amount.ToString("#,0.####", _priceFormatProvider)} WSBT = *${priceUSD}* \\(*{change}%*\\)\n{disclaimer}");
+                    string priceUSD = this._priceFormat.FormatNormal(data.Price * amount);
+                    text = TelegramMardown.EscapeV2($"In last trade, {amount.ToString("#,0.####", _priceFormat)} WSBT = *${priceUSD}* \\(*{change}%*\\)\n{disclaimer}");
                 }
                 else
                 {
-                    string priceUSD = data.Price.ToString(_priceFormatShort, _priceFormatProvider);
+                    string priceUSD = this._priceFormat.FormatNormal(data.Price);
                     text = TelegramMardown.EscapeV2($"In last trade, 1 WSBT = *${priceUSD}* \\(*{change}%*\\)\n{disclaimer}");
                 }
 
@@ -106,8 +100,8 @@ namespace WSBC.ChatBots.Telegram.Commands
                     return;
                 }
 
-                string volumeWSBT = data.Volume.ToString(_priceFormatShort, _priceFormatProvider);
-                string volumeUSD = ((decimal)data.Volume * data.Price).ToString(_priceFormatShort, _priceFormatProvider);
+                string volumeWSBT = this._priceFormat.FormatNormal(data.Volume);
+                string volumeUSD = this._priceFormat.FormatNormal((decimal)data.Volume * data.Price);
                 string text = TelegramMardown.EscapeV2($"WSBT traded on STEX in last 24 hours:\n*{volumeWSBT} \\(${volumeUSD}\\)*\n" +
                     "_Data provided by [STEX](https://app.stex.com/en/trading/pair/USDT/WSBT/5). For exchange-independent price, visit [LiveCoinWatch](https://www.livecoinwatch.com/price/WallStreetBetsToken-WSBT)_.");
                 await context.Client.SendTextMessageAsync(context.ChatID, text, ParseMode.MarkdownV2, 

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using WSBC.ChatBots.Coin;
 using WSBC.ChatBots.Coin.Explorer;
 using WSBC.ChatBots.Coin.MiningPoolStats;
+using WSBC.ChatBots.Utilities;
 
 namespace WSBC.ChatBots.Discord.Services
 {
@@ -15,11 +16,13 @@ namespace WSBC.ChatBots.Discord.Services
     {
         private readonly MiningPoolStatsOptions _poolStatsOptions;
         private readonly CoinOptions _options;
+        private readonly PriceFormatProvider _priceFormat;
 
-        public CoinDataEmbedBuilder(IOptionsSnapshot<CoinOptions> options, IOptionsSnapshot<MiningPoolStatsOptions> poolStatsOptions)
+        public CoinDataEmbedBuilder(IOptionsSnapshot<CoinOptions> options, IOptionsSnapshot<MiningPoolStatsOptions> poolStatsOptions, PriceFormatProvider priceFormatProvider)
         {
             this._options = options.Value;
             this._poolStatsOptions = poolStatsOptions.Value;
+            this._priceFormat = priceFormatProvider;
         }
 
         public Embed Build(CoinData data, IMessage message)
@@ -27,9 +30,9 @@ namespace WSBC.ChatBots.Discord.Services
             EmbedBuilder builder = this.CreateDefaultEmbed(message);
             builder.Title = this._options.CoinName;
             builder.Url = this._options.CoinURL;
-            builder.AddField("Current Supply", data.Supply.ToString("N0", CultureInfo.InvariantCulture), inline: true);
-            builder.AddField("Market Cap", $"${data.MarketCap.ToString("0.00", CultureInfo.InvariantCulture)}", inline: true);
-            builder.AddField("BTC Value", data.BtcPrice, inline: true);
+            builder.AddField("Current Supply", this._priceFormat.FormatCardinal(data.Supply), inline: true);
+            builder.AddField("Market Cap", $"${this._priceFormat.FormatNormal(data.MarketCap)}", inline: true);
+            builder.AddField("BTC Value", this._priceFormat.FormatVeryLong(data.BtcPrice), inline: true);
             builder.AddField("Network", this.BuildNetworkFieldText(data), inline: false);
             builder.AddField("Last Block", this.BuildLatestBlockFieldText(data), inline: false);
 

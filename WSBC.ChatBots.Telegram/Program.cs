@@ -101,6 +101,9 @@ namespace WSBC.ChatBots.Telegram
             services.AddSingleton<IAutopostService, AutopostService>()
                 .Configure<AutopostOptions>(configuration.GetSection("Autopost"));
 
+            // Price formatting
+            services.AddTransient<PriceFormatProvider>();
+
             return services;
         }
 
