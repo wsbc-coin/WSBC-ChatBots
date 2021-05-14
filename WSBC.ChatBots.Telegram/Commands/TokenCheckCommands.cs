@@ -43,6 +43,7 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._handler.Register("/price", "Gets current WSBT price (according to STEX.com)", CmdPrice);
             this._handler.Register("/volume", "Gets WSBT trading volume (according to STEX.com)", CmdVolume);
             this._handler.Register("/exchanges", "Gets list of WSBT exchanges", CmdExchanges);
+            this._handler.Register("/buy", null, CmdExchanges);
         }
 
         private async void CmdAddress(ITelegramBotClient client, Message msg)
