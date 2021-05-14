@@ -8,11 +8,11 @@ namespace WSBC.ChatBots.Telegram
     {
         public string Command { get; }
         public string Description { get; }
-        public Action<ITelegramBotClient, Message> Callback { get; }
+        public Action<CommandContext> Callback { get; }
 
         public bool IsListed => !string.IsNullOrWhiteSpace(this.Description);
 
-        public TelegramCommand(string command, string description, Action<ITelegramBotClient, Message> callback)
+        public TelegramCommand(string command, string description, Action<CommandContext> callback)
         {
             if (string.IsNullOrWhiteSpace(command))
                 throw new ArgumentNullException(nameof(command));
@@ -28,11 +28,11 @@ namespace WSBC.ChatBots.Telegram
             this.Callback = callback;
         }
 
-        public TelegramCommand(string command, Action<ITelegramBotClient, Message> callback)
+        public TelegramCommand(string command, Action<CommandContext> callback)
             : this(command, null, callback) { }
 
-        public void Invoke(ITelegramBotClient client, Message message)
-            => this.Callback.Invoke(client, message);
+        public void Invoke(CommandContext context)
+            => this.Callback.Invoke(context);
 
         public static explicit operator BotCommand(TelegramCommand command)
             => new BotCommand() { Command = command.Command, Description = command.Description };

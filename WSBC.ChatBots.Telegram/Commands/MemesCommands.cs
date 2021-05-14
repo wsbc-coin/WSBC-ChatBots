@@ -4,8 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
 using WSBC.ChatBots.Memes;
 using File = System.IO.File;
@@ -32,10 +30,10 @@ namespace WSBC.ChatBots.Telegram.Commands
             this._handler.Register("/lambo", "Shows the Lambo you'll buy with WSBT! \uD83D\uDE0E", CmdLambo);
         }
 
-        private void CmdLambo(ITelegramBotClient client, Message msg)
-            => _ = this.SendRandomFileAsync(_memesOptions.CurrentValue.LamboPath, $"Lambo for you, @{msg.From.Username}! \uD83D\uDE0E", client, msg);
+        private void CmdLambo(CommandContext context)
+            => _ = this.SendRandomFileAsync(_memesOptions.CurrentValue.LamboPath, $"Lambo for you, @{context.Message.From.Username}! \uD83D\uDE0E", context);
 
-        private async Task SendRandomFileAsync(string path, string text, ITelegramBotClient client, Message msg)
+        private async Task SendRandomFileAsync(string path, string text, CommandContext context)
         {
             try
             {
@@ -45,11 +43,11 @@ namespace WSBC.ChatBots.Telegram.Commands
                 string file = _randomFile.Pick(path);
                 using FileStream stream = File.OpenRead(file);
 
-                await client.SendPhotoAsync(msg.Chat.Id, new InputOnlineFile(stream), text, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                await context.Client.SendPhotoAsync(context.ChatID, new InputOnlineFile(stream), text, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex.LogAsError(this._log, "Exception when picking a random meme from path '{Path}'", path))
             {
-                await client.SendTextMessageAsync(msg.Chat.Id, "\u274C Failed sending meme, please contact the developers", cancellationToken: this._cts.Token).ConfigureAwait(false);
+                await context.Client.SendTextMessageAsync(context.ChatID, "\u274C Failed sending meme, please contact the developers", cancellationToken: this._cts.Token).ConfigureAwait(false);
                 return;
             }
         }

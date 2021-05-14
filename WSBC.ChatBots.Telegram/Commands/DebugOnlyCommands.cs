@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 using WSBC.ChatBots.Telegram.Autopost;
 
 namespace WSBC.ChatBots.Telegram.Commands
@@ -27,8 +25,8 @@ namespace WSBC.ChatBots.Telegram.Commands
             handler.Register("/autopost_test", this.CmdNextAutopost);
         }
 
-        private async void CmdNextAutopost(ITelegramBotClient client, Message message)
-            => await this._autopost.SendNextAsync(message.Chat.Id, this._cts.Token).ConfigureAwait(false);
+        private async void CmdNextAutopost(CommandContext context)
+            => await this._autopost.SendNextAsync(context.ChatID, this._cts.Token).ConfigureAwait(false);
 
         public void Dispose()
         {
