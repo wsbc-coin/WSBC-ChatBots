@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using WSBC.ChatBots.Token;
 using WSBC.ChatBots.Token.DexGuru;
 using WSBC.ChatBots.Token.DexGuru.Services;
@@ -21,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services));
 
             services.Configure<TokenOptions>(_ => { });
+            services.AddSingleton<IPostConfigureOptions<TokenOptions>, ConfigureTokenOptions>();
 
             services.AddDexGuruClient();
             services.AddDexTradeClient();
@@ -41,7 +43,6 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
                 services.Configure<DexGuruOptions>(configuration);
 
-            services.Configure<TokenOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ITokenDataClient<DexGuruData>, DexGuruDataClient>();
 
@@ -59,7 +60,6 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
                 services.Configure<DexTradeOptions>(configuration);
 
-            services.Configure<TokenOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ITokenDataClient<DexTradeData>, DexTradeDataClient>();
 
@@ -77,7 +77,6 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
                 services.Configure<StexOptions>(configuration);
 
-            services.Configure<TokenOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ITokenDataClient<StexData>, StexDataClient>();
 
@@ -95,7 +94,6 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
                 services.Configure<PancakeSwapOptions>(configuration);
 
-            services.Configure<TokenOptions>(_ => { });
             services.AddHttpClient();
             services.TryAddTransient<ITokenDataClient<PancakeSwapData>, PancakeSwapDataClient>();
 
