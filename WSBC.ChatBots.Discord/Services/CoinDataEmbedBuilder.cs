@@ -69,7 +69,7 @@ namespace WSBC.ChatBots.Discord.Services
         public Embed Build(MiningPoolStatsData data, IMessage message)
         {
             EmbedBuilder builder = this.CreateDefaultEmbed(message);
-            builder.WithFooter("Data provided by PoolMiningStats", this._options.CoinIconURL);
+            builder.WithFooter("Data provided by PoolMiningStats", this._options.IconURL);
             builder.WithTimestamp(data.Timestamp);
             StringBuilder poolListBuilder = new StringBuilder();
             int i = 0;
@@ -88,8 +88,8 @@ namespace WSBC.ChatBots.Discord.Services
         private EmbedBuilder CreateDefaultEmbed(IMessage message)
         {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.WithThumbnailUrl(this._options.CoinIconURL);
-            builder.WithFooter("Data provided by WSBC Explorer and TxBit", this._options.CoinIconURL);
+            builder.WithThumbnailUrl(this._options.IconURL);
+            builder.WithFooter("Data provided by WSBC Explorer and TxBit", this._options.IconURL);
             builder.WithCurrentTimestamp();
 
             // message dependant stuff

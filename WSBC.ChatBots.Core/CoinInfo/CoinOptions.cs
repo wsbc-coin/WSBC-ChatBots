@@ -8,7 +8,7 @@ namespace WSBC.ChatBots.Coin
     {
         public string CoinName { get; set; } = "WallStreetBets Coin";
         public string CoinTicker { get; set; } = "WSBC";
-        public string CoinIconURL { get; set; } = "https://avatars.githubusercontent.com/u/79186640";
+        public string IconURL { get; set; } = "https://avatars.githubusercontent.com/u/79186640";
         public string CoinURL { get; set; } = "https://wallstreetbetsbros.com/";
         public IEnumerable<ExchangeInfo> Exchanges { get; set; }
 
@@ -20,12 +20,12 @@ namespace WSBC.ChatBots.Coin
     {
         private static readonly ExchangeInfo[] _defaultExchanges = new ExchangeInfo[]
         {
-                new ExchangeInfo()
-                {
-                    DisplayName = "TxBit",
-                    URL = "https://txbit.io/Trade/WSBC/BTC",
-                    Pairs = new string[] { "BTC" }
-                }
+            new ExchangeInfo()
+            {
+                DisplayName = "TxBit",
+                URL = "https://txbit.io/Trade/WSBC/BTC",
+                Pairs = new string[] { "BTC" }
+            }
         };
 
         public void PostConfigure(string name, CoinOptions options)

@@ -31,12 +31,12 @@ namespace WSBC.ChatBots.Discord.Commands
         public async Task HelpAsync()
         {
             EmbedBuilder embed = new EmbedBuilder();
-            embed.ThumbnailUrl = this._coinOptions.CoinIconURL;
+            embed.ThumbnailUrl = this._coinOptions.IconURL;
             embed.Title = this._coinOptions.CoinName;
             embed.Url = this._coinOptions.CoinURL;
             embed.Description = $"A bot for checking data about {this._coinOptions.CoinName} and its network!";
             embed.WithAuthor(base.Context.User);
-            embed.WithFooter($"{this._coinOptions.CoinTicker} Bot v{GetBotVersion()}", this._coinOptions.CoinIconURL);
+            embed.WithFooter($"{this._coinOptions.CoinTicker} Bot v{GetBotVersion()}", this._coinOptions.IconURL);
 
             // build fields for all commands
             StringBuilder builder = new StringBuilder();
