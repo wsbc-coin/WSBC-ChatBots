@@ -69,8 +69,9 @@ namespace WSBC.ChatBots.Discord
                 .AddSingleton<IDiscordClient>(s => s.GetRequiredService<DiscordSocketClient>())
                 // - Command service
                 .AddSingleton<ICommandHandler, SimpleCommandHandler>()
-                // - Embed builder
+                // - Embed builders
                 .AddTransient<ICoinDataEmbedBuilder, CoinDataEmbedBuilder>()
+                .AddTransient<ITokenDataEmbedBuilder, TokenDataEmbedBuilder>()
                 // - Config
                 .Configure<DiscordOptions>(configuration.GetSection("Discord"));
 

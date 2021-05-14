@@ -29,7 +29,7 @@ namespace WSBC.ChatBots.Discord.Commands
         [Command("coin")]
         [Alias("info")]
         [Summary("Shows current currency and blockchain data.")]
-        [Priority(10)]
+        [Priority(50)]
         public async Task CmdCoinDataAsync()
         {
             using IDisposable logScope = this._log.BeginCommandScope(base.Context, this);
@@ -62,7 +62,7 @@ namespace WSBC.ChatBots.Discord.Commands
 
         [Command("block")]
         [Summary("Gets block data.")]
-        [Priority(9)]
+        [Priority(49)]
         public async Task CmdBlockDataAsync([Summary("Block height, or block unique hash.")]string block)
         {
             using IDisposable logScope = this._log.BeginCommandScope(base.Context, this);
@@ -97,7 +97,7 @@ namespace WSBC.ChatBots.Discord.Commands
         [Command("transaction")]
         [Alias("tx")]
         [Summary("Gets transaction data.")]
-        [Priority(8)]
+        [Priority(48)]
         public async Task CmdTransactionDataAsync([Summary("Unique hash of the transaction")]string hash)
         {
             using IDisposable logScope = this._log.BeginCommandScope(base.Context, this);
@@ -131,7 +131,7 @@ namespace WSBC.ChatBots.Discord.Commands
 
         [Command("pools")]
         [Summary("Gets mining pools data.")]
-        [Priority(7)]
+        [Priority(47)]
         public async Task CmdPoolsDataAsync()
         {
             using IDisposable logScope = this._log.BeginCommandScope(base.Context, this);
