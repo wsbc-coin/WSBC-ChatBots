@@ -13,7 +13,7 @@ namespace WSBC.ChatBots.Telegram
 
         public static IReadOnlyCollection<char> UnescapedCharacters => _unescapedCharacters.ToArray();
 
-        public static string EscapeV2(string text)
+        public static string EscapeV2(string text, ICollection<char> ignoredCharacters)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return text;
@@ -38,11 +38,20 @@ namespace WSBC.ChatBots.Telegram
                 // skip all letters and digits
                 if (char.IsDigit(c) || char.IsLetter(c))
                     return false;
+                // check for non-ANSI
+                if (c > 255)
+                    return false;
                 // skip elements on exclusion list
-                if (_unescapedCharacters.Contains(c))
+                if (ignoredCharacters?.Contains(c) == true)
                     return false;
                 return true;
             }
         }
+
+        public static string EscapeV2(string text)
+            => EscapeV2(text, _unescapedCharacters);
+
+        public static string FullEscapeV2(string text)
+            => EscapeV2(text, null);
     }
 }

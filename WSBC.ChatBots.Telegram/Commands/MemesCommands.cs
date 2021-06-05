@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using WSBC.ChatBots.Memes;
 using File = System.IO.File;
@@ -31,7 +32,7 @@ namespace WSBC.ChatBots.Telegram.Commands
         }
 
         private void CmdLambo(CommandContext context)
-            => _ = this.SendRandomFileAsync(_memesOptions.CurrentValue.LamboPath, $"Lambo for you, @{context.Message.From.Username}! \uD83D\uDE0E", context);
+            => _ = this.SendRandomFileAsync(_memesOptions.CurrentValue.LamboPath, $"Lambo for you, {new TelegramPing(context.Message.From)}! \uD83D\uDE0E", context);
 
         private async Task SendRandomFileAsync(string path, string text, CommandContext context)
         {
@@ -43,7 +44,7 @@ namespace WSBC.ChatBots.Telegram.Commands
                 string file = _randomFile.Pick(path);
                 using FileStream stream = File.OpenRead(file);
 
-                await context.Client.SendPhotoAsync(context.ChatID, new InputOnlineFile(stream), text, cancellationToken: this._cts.Token).ConfigureAwait(false);
+                await context.Client.SendPhotoAsync(context.ChatID, new InputOnlineFile(stream), TelegramMardown.EscapeV2(text), ParseMode.MarkdownV2, cancellationToken: this._cts.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex.LogAsError(this._log, "Exception when picking a random meme from path '{Path}'", path))
             {
